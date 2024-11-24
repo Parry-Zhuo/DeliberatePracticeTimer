@@ -23,7 +23,7 @@ Key Features:
 
 **Distraction Logging**: Users can log instances of distractions, categorizing them by short and long interruptions, to better understand and manage their focus.
 
-**Contentment Assessment**: Post-session, users rate their satisfaction with the study period, aiding in emotional and educational reflection.
+**Contentment Assessment**: Post-session, users rate their satisfaction with the practice period, aiding in emotional and educational reflection.
 
 All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to reflect.
 
