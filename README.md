@@ -3,7 +3,7 @@ To create this app in such a timer period, I employed the usage of CHATGPT utili
 
 What is deliberate practice?
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
-focused, goal-oriented practice that targets specific weaknesses, incorporates immediate feedback, pushes beyond comfort zones.
+focused, goal-oriented practice that targets specific weaknesses, incorporates immediate feedback, and pushing comfort zones.
 
 Deliberate Practice Tracker App
 Purpose: This app seeks to aid users in applying deliberate practice by creating a platform to easily label specific tasks they are performing, providing immediate feedback, while saving the data
