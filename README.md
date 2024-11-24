@@ -13,7 +13,7 @@ for the future to allow users to easil define trends in their practice.
 
 Key Features:
 
-Goal Setting: Users can define clear objectives for each study period, ensuring each session is purpose-driven.
+Goal Setting: Users can define clear objectives for each practice period, ensuring each session is purpose-driven.
 Feedback Mechanism: After each session, the app prompts users to reflect and record what was learned and identify areas for further improvement, reinforcing the learning process.
 Focus Enhancer: An optional Tick-Tock sound feature can be activated to help maintain concentration throughout the session.
 Time Logging: A straightforward start/stop timer helps track the duration of each study session.
