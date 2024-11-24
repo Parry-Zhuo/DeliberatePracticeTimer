@@ -13,13 +13,19 @@ for the future to allow users to easil define trends in their practice.
 
 Key Features:
 
-**Goal Setting**: Users can define clear objectives for each practice period, ensuring each session is purpose-driven.
-**Feedback Mechanism**: After each session, the app prompts users to reflect and record what was learned and identify areas for further improvement, reinforcing the learning process.
-**Focus Enhancer**: An optional Tick-Tock sound feature can be activated to help maintain concentration throughout the session.
-**Time Logging**: A straightforward start/stop timer helps track the duration of each study session.
-**Distraction Logging**: Users can log instances of distractions, categorizing them by short and long interruptions, to better understand and manage their focus.
-**Contentment Assessment**: Post-session, users rate their satisfaction with the study period, aiding in emotional and educational reflection.
+Goal Setting: Users can define clear objectives for each practice period, ensuring each session is purpose-driven.
 
+Feedback Mechanism: After each session, the app prompts users to reflect and record what was learned and identify areas for further improvement, reinforcing the learning process.
+
+Focus Enhancer: An optional Tick-Tock sound feature can be activated to help maintain concentration throughout the session.
+
+Time Logging: A straightforward start/stop timer helps track the duration of each study session.
+
+Distraction Logging: Users can log instances of distractions, categorizing them by short and long interruptions, to better understand and manage their focus.
+
+Contentment Assessment: Post-session, users rate their satisfaction with the study period, aiding in emotional and educational reflection.
+
+All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to reflect.
 All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to reflect.
 
 ![image](https://github.com/user-attachments/assets/220ecf08-aea3-4937-8232-1d27b97b084d)
