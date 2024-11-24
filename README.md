@@ -5,6 +5,9 @@ What is deliberate practice?
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
 focused, goal-oriented practice that targets specific weaknesses, incorporates immediate feedback, and pushing comfort zones.
 
+![image](https://github.com/user-attachments/assets/2a6373c8-1c9b-43f9-a797-1eba4f32f7bb)
+
+
 Deliberate Practice Tracker App
 Purpose: This app seeks to aid users in applying deliberate practice by creating a platform to easily label specific tasks they are performing, providing immediate feedback, while saving the data
 for the future to allow users to easil define trends in their practice.
