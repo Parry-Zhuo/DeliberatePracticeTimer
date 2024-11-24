@@ -1,6 +1,5 @@
 This is a project I created for my "introduction to python" course, where I was given 2 days to create a project of my choosing in python.
-
-To create this app in such a timer period, I employed the usage of CHATGPT utilizing many prompting techniques to brainstorm, and code this project.
+To create this app in such a timer period, I employed the usage of CHATGPT utilizing prompting techniques to brainstorm, and code this project.
 
 What is deliberate practice?
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
