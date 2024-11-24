@@ -1,4 +1,4 @@
-This is a project I created on for my "introduction to python" course, where I was given 2 days to create a project of my choosing in python.
+This is a project I created for my "introduction to python" course, where I was given 2 days to create a project of my choosing in python.
 
 What is deliberate practice?
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
