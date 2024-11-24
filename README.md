@@ -19,3 +19,4 @@ Contentment Assessment: Post-session, users rate their satisfaction with the stu
 
 All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to reflect.
 
+![image](https://github.com/user-attachments/assets/220ecf08-aea3-4937-8232-1d27b97b084d)
