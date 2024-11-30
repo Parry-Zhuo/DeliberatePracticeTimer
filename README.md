@@ -22,7 +22,7 @@ Key Features:
 
 **Contentment Assessment**: Post-session, users rate their satisfaction with the practice period, aiding in emotional and educational reflection.
 
-All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to reflect.
+All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to log in data and reflect upon their habits from different computers.
 
 ![image](https://github.com/user-attachments/assets/220ecf08-aea3-4937-8232-1d27b97b084d)
 
