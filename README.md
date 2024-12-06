@@ -16,11 +16,11 @@ Key Features:
 
 **Focus Enhancer**: An optional Tick-Tock sound feature can be activated to help maintain concentration throughout the session.
 
-**Time Logging**: A straightforward start/stop timer helps track the duration of each study session.
+**Time Logging**: A straightforward start/stop timer helps track the duration of each practice session.
 
 **Distraction Logging**: Users can log instances of distractions, categorizing them by short and long interruptions, to better understand and manage their focus.
 
-**Contentment Assessment**: Post-session, users rate their satisfaction with the practice period, aiding in emotional and educational reflection.
+
 
 All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to log in data and reflect upon their habits from different computers.
 
