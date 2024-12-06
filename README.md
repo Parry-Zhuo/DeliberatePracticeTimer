@@ -8,6 +8,8 @@ Deliberate Practice Tracker App
 Purpose: This app seeks to aid users in applying deliberate practice by creating a platform to easily label specific tasks they are performing, providing immediate feedback, while saving the data
 for the future to allow users to easil define trends in their practice.
 
+![image](https://github.com/user-attachments/assets/220ecf08-aea3-4937-8232-1d27b97b084d)
+
 Key Features:
 
 **Goal Setting**: Users can define clear objectives for each practice period, ensuring each session is purpose-driven.
@@ -24,7 +26,7 @@ Key Features:
 
 All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to log in data and reflect upon their habits from different computers.
 
-![image](https://github.com/user-attachments/assets/220ecf08-aea3-4937-8232-1d27b97b084d)
+
 
 
 This is a project I created for my "introduction to python" 4 week course, where I was assigned 2 days to create a project of my choosing in python.
