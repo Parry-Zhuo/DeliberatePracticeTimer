@@ -9,15 +9,31 @@ from ttkthemes import ThemedTk
 import pygame
 from tkinter import ttk
 
+from selectedButton import metaBox
+import operator
+import json
+from textBox import AutoResizedText
+from customNotebook import CustomNotebook
+import copy
+import sys
+from tkinter import filedialog
+
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from google.oauth2 import service_account
+
 class PomodoroApp:
     def __init__(self, master):
-        self.shortDistraction = 0
+        # self.reflection_textbox_visible = False
+        # self.problem_solving_frame_visible = False  # Frame visibility state
+        self.active_frame = None
+
+
+        self.numOfDistraction = 0
         self.longDistraction = 0
 
         self.master = master
-        self.master.title("Drip Dropper")
-        self.master.geometry('350x250')
-        self.master.configure(background='#383838')
+
 
         pygame.init()
         pygame.mixer.init()  # Initialize the mixer module
@@ -30,7 +46,6 @@ class PomodoroApp:
         self.setup_contemplation_widgets()
         self.setup_reflection_widgets()
         self.show_contemplation()
-
     def setup_frames(self):
         style = ttk.Style()
         style.configure('TFrame', background='#383838')
@@ -55,10 +70,31 @@ class PomodoroApp:
         for frame in self.frames:
             frame.pack(fill='both', expand=True)
 
+
+        self.focus_button_frame = ttk.Frame(self.focus_frame, style='TFrame')
+
+        self.focus_problemsolving_frame = ttk.Frame(self.master, style='TFrame')
+        self.focus_distraction_frame = ttk.Frame(self.master, style='TFrame')
+
+        # Pack distractionTextBox before focus_button_frame
+        self.distractionTextBox = tk.Text(self.focus_distraction_frame, height=12, width=70)
+        self.distractionTextBox.pack(pady=(5, 5))#, 
+
+        # Create and pack the metaBox before the button frame
+        head = metaBox(self.focus_problemsolving_frame)
+        # head.setHead(head)
+
+        self.focus_frame_list = [self.focus_problemsolving_frame,self.focus_distraction_frame]
+
+        for frame in self.focus_frame_list:
+            frame.pack(fill='both', expand=True)
+
+        self.focus_problemsolving_frame.pack_forget()
+        self.focus_distraction_frame.pack_forget()
+
         self.focus_frame.pack_forget()
         self.reflection_frame.pack_forget()
         self.contemplation_frame.pack_forget()
-
     def setup_focus_widgets(self):
         self.focus_frame.config(style='TFrame')
         self.focus_frame.pack(fill='both', expand=True, pady=(10, 0), anchor='n')
@@ -69,36 +105,66 @@ class PomodoroApp:
         self.focus_goal_label = ttk.Label(self.focus_frame, text="Goal: Work on the project (1-2 sentences)", style='TLabel')
         self.focus_goal_label.pack(pady=(5, 10))
 
-        self.timer_label = ttk.Label(self.focus_frame, text="25:00", font=('Helvetica', 24), foreground='#E0E0E0', background='#383838')
+        self.timer_label = ttk.Label(
+            self.focus_frame,
+            text="25:00",
+            font=('Helvetica', 24),
+            foreground='#E0E0E0',
+            background='#383838'
+        )
         self.timer_label.pack(pady=(5, 20))
 
-        button_frame = ttk.Frame(self.focus_frame, style='TFrame')
-        button_frame.pack(pady=(5, 5))
 
-        short_distraction_button = ttk.Button(button_frame, text="SHORT DISTRACTION", style='TButton', command=lambda: setattr(self, 'shortDistraction', self.shortDistraction + 1))
-        short_distraction_button.pack(side='left', padx=(10, 20))
+        self.focus_button_frame.pack(pady=(5, 5))
 
-        long_distraction_button = ttk.Button(button_frame, text="LONG DISTRACTION", style='TButton', command=lambda: setattr(self, 'longDistraction', self.longDistraction + 1))
-        long_distraction_button.pack(side='right', padx=(20, 10))
+        # Single distraction button
+        distraction_button = ttk.Button(
+            self.focus_button_frame,
+            text="DISTRACTION",
+            style='TButton',
+            command=lambda: self.toggle_focus_frames(frame_name="distraction")
+        )
+        distraction_button.pack(side='right', padx=(10, 20))
 
-        end_focus_button = ttk.Button(self.focus_frame, text="END FOCUS", style='TButton', command=self.show_reflection)
+        problem_solving_button = ttk.Button(
+            self.focus_button_frame,
+            text="PROBLEM SOLVING",
+            style='TButton',
+            command=lambda: self.toggle_focus_frames(frame_name="problem_solving")
+        )
+        problem_solving_button.pack(side='left', padx=(5, 10))
+        
+
+        end_focus_button = ttk.Button(
+            self.focus_frame,
+            text="END FOCUS",
+            style='TButton',
+            command=self.show_reflection
+        )
         end_focus_button.pack(pady=(20, 10))
 
-        discard_focus_button = ttk.Button(self.focus_frame, text="DISCARD", style='TButton', command=self.show_contemplation)
+        discard_focus_button = ttk.Button(
+            self.focus_frame,
+            text="DISCARD",
+            style='TButton',
+            command=self.show_contemplation
+        )
         discard_focus_button.pack(pady=(20, 10))
 
-        self.toggle_sound_button = ttk.Button(self.focus_frame, text="TOGGLE SOUND", style='TButton', command=self.toggle_sound)
+        self.toggle_sound_button = ttk.Button(
+            self.focus_frame,
+            text="TOGGLE SOUND",
+            style='TButton',
+            command=self.toggle_sound
+        )
         self.toggle_sound_button.pack(pady=(10, 0))
 
-
         self.pomodoro = Stopwatch(self.timer_label)
-
     def setup_contemplation_widgets(self):
-        contemplation_label = ttk.Label(self.contemplation_frame, text="REST", style='TLabel', font=('Helvetica', 16))
-        contemplation_label.pack(pady=10)
 
         self.task_label = ttk.Label(self.contemplation_frame, text="TASK", style='TLabel')
         self.task_label.pack(pady=(10, 2), anchor='w')
+
         self.task_entry = ttk.Entry(self.contemplation_frame, style='TEntry', width=40)
         self.task_entry.pack(pady=(2, 10))
         self.task_entry.bind("<Tab>", lambda e: self.goal_entry.focus_set())
@@ -127,65 +193,91 @@ class PomodoroApp:
         contemplation_button.pack(pady=(10, 10))
 
         self.contemplation_frame.pack(fill='both', expand=True, padx=10, pady=10)
-
     def setup_reflection_widgets(self):
         self.reflection_frame.config(style='TFrame')
         self.reflection_frame.pack(fill='both', expand=True)
 
-        self.reflection_task_label = ttk.Label(self.reflection_frame, text="TASK", style='TLabel')
+        self.reflection_task_label = ttk.Label(
+            self.reflection_frame,
+            text="TASK",
+            style='TLabel'
+        )
         self.reflection_task_label.pack(pady=(10, 0), anchor='n')
 
-        self.reflection_goal_label = ttk.Label(self.reflection_frame, text="Goal: Work on the project (1-2 sentences)", style='TLabel')
+        self.reflection_goal_label = ttk.Label(
+            self.reflection_frame,
+            text="Goal: Work on the project (1-2 sentences)",
+            style='TLabel'
+        )
         self.reflection_goal_label.pack(pady=(5, 10))
 
+        # Single distraction display
         distraction_frame = ttk.Frame(self.reflection_frame, style='TFrame')
         distraction_frame.pack(pady=(5, 10))
 
-        short_label = ttk.Label(distraction_frame, text="Short Distractions:", style='TLabel')
-        self.short_value = ttk.Label(distraction_frame, text=str(self.shortDistraction), style='TLabel')
-        long_label = ttk.Label(distraction_frame, text="Long Distractions:", style='TLabel')
-        self.long_value = ttk.Label(distraction_frame, text=str(self.longDistraction), style='TLabel')
+        distraction_label = ttk.Label(distraction_frame, text="Distractions:", style='TLabel')
+        self.distraction_value = ttk.Label(distraction_frame, text=str(self.numOfDistraction), style='TLabel')
 
-        short_label.pack(side='left')
-        self.short_value.pack(side='left')
-        long_label.pack(side='left', padx=(20, 0))
-        self.long_value.pack(side='left')
+        distraction_label.pack(side='left')
+        self.distraction_value.pack(side='left')
 
-        self.break_time_label = ttk.Label(self.reflection_frame, text="00:00", style='TLabel', font=('Helvetica', 24))
+        self.break_time_label = ttk.Label(
+            self.reflection_frame,
+            text="00:00",
+            style='TLabel',
+            font=('Helvetica', 24)
+        )
         self.break_time_label.pack(pady=(5, 10))
 
         self.reflection_textbox = tk.Text(self.reflection_frame, height=12, width=70)
         self.reflection_textbox.pack(pady=(5, 5))
 
-        satisfaction_label = ttk.Label(self.reflection_frame, text="SATISFACTION LEVEL (1-10):", style='TLabel')
+        satisfaction_label = ttk.Label(
+            self.reflection_frame,
+            text="SATISFACTION LEVEL (1-10):",
+            style='TLabel'
+        )
         satisfaction_label.pack(pady=(5, 2))
+
         self.satisfaction_entry = ttk.Entry(self.reflection_frame, style='TEntry', width=5)
         self.satisfaction_entry.pack(pady=(2, 10))
-
         self.satisfaction_entry.bind("<FocusOut>", self.validate_satisfaction)
+
         button_frame = ttk.Frame(self.reflection_frame, style='TFrame')
         button_frame.pack(pady=(10, 10))
-        insert_button = ttk.Button(button_frame, text="INSERT", style='TButton', command=lambda: self.show_contemplation("insert"))
-        discard_button = ttk.Button(button_frame, text="DISCARD", style='TButton', command=lambda: self.show_contemplation("discard"))
+
+        insert_button = ttk.Button(
+            button_frame,
+            text="INSERT",
+            style='TButton',
+            command=lambda: self.show_contemplation("insert")
+        )
+        discard_button = ttk.Button(
+            button_frame,
+            text="DISCARD",
+            style='TButton',
+            command=lambda: self.show_contemplation("discard")
+        )
         insert_button.pack(side='left', padx=10)
         discard_button.pack(side='left')
 
-
         self.breakStopwatch = Stopwatch(self.break_time_label)
-
     def show_focus(self):
         error_present = False
 
+        # Reset field text color
         self.task_entry.config(foreground='white')
         self.pomodoro_entry.config(foreground='white')
         self.break_entry.config(foreground='white')
 
+        # Validate task entry
         if not self.task_entry.get().strip():
             self.task_entry.delete(0, 'end')
             self.task_entry.insert(0, "Error: Task cannot be empty.")
             self.task_entry.config(foreground='red')
             error_present = True
 
+        # Validate pomodoro and break entries
         try:
             pomodoro_time = int(self.pomodoro_entry.get())
             break_time = int(self.break_entry.get())
@@ -200,6 +292,7 @@ class PomodoroApp:
             self.break_entry.config(foreground='red')
             error_present = True
 
+        # If no errors, proceed to focus mode
         if not error_present:
             self.toggle_sound(state="ON")
             task_text = self.task_entry.get()
@@ -207,45 +300,54 @@ class PomodoroApp:
             self.focus_task_label.config(text="Task: " + task_text)
             self.focus_goal_label.config(text="Goal: " + goal_text)
 
+            # Reset and start pomodoro timer
             self.pomodoro.running = False
             self.pomodoro.in_bonus = False
             self.pomodoro.set_time(pomodoro_time)
             self.pomodoro.start()
-            # Timer update will be handled by the Stopwatch class
 
+            # Switch frames
             self.contemplation_frame.pack_forget()
             self.reflection_frame.pack_forget()
             self.focus_frame.pack(fill='both', expand=True)
-
+        self.master.update_idletasks()  # Refresh geometry calculations
+        self.master.geometry("")  # Let Tkinter automatically resize the window
+            
     def show_reflection(self):
+        # Pause pomodoro and sound
         self.tick_channel.stop()
         self.pomodoro.pause()
+
+        # Print data for debugging
         data = self.pomodoro.getStopWatchData()
         print(data)
-        print("\n distraction counts" + str(self.shortDistraction) + " " + str(self.longDistraction))
+        print("\nDistraction count: " + str(self.numOfDistraction))
 
+        # Update reflection labels
         task_text = self.task_entry.get()
         goal_text = self.goal_entry.get()
         self.reflection_task_label.config(text="Task: " + task_text)
         self.reflection_goal_label.config(text="Goal: " + goal_text)
+        self.distraction_value.config(text=str(self.numOfDistraction))
 
-        self.short_value.config(text=str(self.shortDistraction))
-        self.long_value.config(text=str(self.longDistraction))
+        distraction_text = self.distractionTextBox.get("1.0", "end-1c")  # Get text from distractionTextBox
+        self.reflection_textbox.delete("1.0", "end")  # Clear the reflection_textbox
+        self.reflection_textbox.insert("1.0", distraction_text)  # Insert text into reflection_textbox
+        self.distractionTextBox.delete("1.0", "end")  # Clear the distractionTextBox
 
+        # Reset and start break timer
         self.breakStopwatch.running = False
         self.breakStopwatch.in_bonus = False
         self.breakStopwatch.set_time(int(self.break_entry.get()))
         self.breakStopwatch.start()
-        # Break timer update will be handled by the Stopwatch class
-        data = self.pomodoro.getStopWatchData()
 
+        # Switch frames
         self.focus_frame.pack_forget()
         self.reflection_frame.pack_forget()
         self.contemplation_frame.pack_forget()
         self.reflection_frame.pack(fill='both', expand=True)
-        self.master.update_idletasks()
-        self.master.geometry('550x500')
-
+        self.master.update_idletasks()  # Refresh geometry calculations
+        self.master.geometry("")  # Let Tkinter automatically resize the window
     def show_contemplation(self, action=None):
         error_present = False
         if action == "insert":
@@ -264,8 +366,8 @@ class PomodoroApp:
             self.reflection_frame.pack_forget()
             self.contemplation_frame.pack_forget()
             self.contemplation_frame.pack(fill='both', expand=True)
-            self.master.geometry('450x350')
-
+            self.master.update_idletasks()  # Refresh geometry calculations
+            self.master.geometry("")  # Let Tkinter automatically resize the window
     def validate_satisfaction(self, event=None):
         try:
             val = int(self.satisfaction_entry.get())
@@ -277,7 +379,6 @@ class PomodoroApp:
             self.satisfaction_entry.delete(0, 'end')
             self.satisfaction_entry.insert(0, "Invalid input")
         return False
-
     def validate_data(self):
         task = self.task_entry.get().strip()
         if not task:
@@ -304,7 +405,7 @@ class PomodoroApp:
             send_notification("Error", "Bonus time for rest cannot be negative.")
             return False
 
-        short_distractions = self.shortDistraction
+        short_distractions = self.numOfDistraction
         if short_distractions < 0:
             send_notification("Error", "Number of short-term distractions cannot be negative.")
             return False
@@ -316,7 +417,67 @@ class PomodoroApp:
 
         return True
 
+    def authenticate_google_sheets(self):
+        """Authenticate and return the Google Sheets service."""
+        SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+        SERVICE_ACCOUNT_FILE = r'C:\Users\Parry\Documents\python\deliberatepra-9ecb1d8fcae6.json'
+
+        creds = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+        try:
+            service = build('sheets', 'v4', credentials=creds)
+            return service
+        except HttpError as err:
+            print(f"An error occurred: {err}")
+            return None
     def insert_into_database(self):
+        SPREADSHEET_ID = '1ETycSikjSfLCkZQLMqMa2GOTWE3Z4peGKZnI7o60VzQ'
+        RANGE_NAME = 'Sheet1!A1'  # Update this range based on your sheet structure
+
+        # Pause timers
+        self.pomodoro.pause()
+        self.breakStopwatch.pause()
+
+        # Prepare data
+        data = {
+            'Start Time': time.strftime("%Y-%m-%d %H:%M:%S", self.pomodoro.startLocalTime) if self.pomodoro.startLocalTime else "Not started",
+            'Task': self.task_entry.get(),
+            'Goal': self.goal_entry.get(),
+            'Time Spent on Task': self.pomodoro.getStopWatchData()['Elapsed Time'],
+            'Bonus Time Spent on Task': self.pomodoro.getStopWatchData()['Bonus Time'],
+            'Time Rested': self.breakStopwatch.getStopWatchData()['Elapsed Time'],
+            'Bonus Time Rested': self.breakStopwatch.getStopWatchData()['Bonus Time'],
+            'Number of Distractions': self.numOfDistraction,
+            'Reflection': self.reflection_textbox.get("1.0", "end-1c"),
+            'Satisfaction Level': self.satisfaction_entry.get(),
+        }
+
+        # Convert data to a list of lists (for Google Sheets API)
+        values = [[v for v in data.values()]]
+
+        # Authenticate and get Google Sheets service
+        service = self.authenticate_google_sheets()
+        if service is None:
+            print("Failed to authenticate Google Sheets API.")
+            return
+
+        # Append data to Google Sheets
+        body = {'values': values}
+        try:
+            result = service.spreadsheets().values().append(
+                spreadsheetId=SPREADSHEET_ID,
+                range=RANGE_NAME,
+                valueInputOption="RAW",  # Use 'RAW' to insert data as-is
+                insertDataOption="INSERT_ROWS",  # Ensure new rows are added
+                body=body
+            ).execute()
+            print(f"{result.get('updates').get('updatedCells')} cells appended.")
+        except Exception as err:
+            print(f"An error occurred with Google Sheets API: {err}. Falling back to Excel.")
+            self.insert_into_database_excel()
+
+    def insert_into_database_excel(self):
         filename = 'database.xlsx'
         self.pomodoro.pause()
         self.breakStopwatch.pause()
@@ -331,8 +492,7 @@ class PomodoroApp:
             'Bonus Time Spent on Task': data['Bonus Time'],
             'Time Rested':  restingData['Elapsed Time'],
             'Bonus Time Rested': restingData['Bonus Time'],
-            'Number of Short-Term Distractions': self.shortDistraction,
-            'Number of Long-Term Distractions': self.longDistraction,
+            'Number of ': self.numOfDistraction,
             'Reflection': self.reflection_textbox.get("1.0", "end-1c"),
             'Satisfaction Level': self.satisfaction_entry.get()
         }
@@ -359,32 +519,87 @@ class PomodoroApp:
         print("Data inserted successfully into Excel.")
 
     def clear_form_fields(self):
+        # self.toggle_reflection_textbox(True)
+        self.active_frame = None
+        # Clear text in reflection labels
         if hasattr(self, 'task_entry'):
             self.reflection_task_label.config(text=" ")
         if hasattr(self, 'goal_entry'):
             self.reflection_goal_label.config(text=" ")
+            
+        # Clear satisfaction entry
         if hasattr(self, 'satisfaction_entry'):
             self.satisfaction_entry.delete(0, 'end')
+            
+        # Clear reflection_textbox
         if hasattr(self, 'reflection_textbox'):
             self.reflection_textbox.delete("1.0", "end")
+            
+        if hasattr(self, 'distractionTextBox'):
+            self.distractionTextBox.delete("1.0", "end")
+            
+        # Reset breakStopwatch
         self.reset_and_pause_break_stopwatch()
-        if hasattr(self, 'short_value'):
-            self.shortDistraction = 0
-            self.short_value.config(text=str(self.shortDistraction))
-        if hasattr(self, 'long_value'):
-            self.longDistraction = 0
-            self.long_value.config(text=str(self.longDistraction))
+        
+        # Reset single distraction count
+        if hasattr(self, 'distraction_value'):
+            self.numOfDistraction = 0
+            self.distraction_value.config(text=str(self.numOfDistraction))
+            
+        # Reset break time label
         if hasattr(self, 'break_time_label'):
             self.break_time_label.config(text="00:00")
 
     def reset_and_pause_break_stopwatch(self):
+        
         if self.breakStopwatch.running:
             self.breakStopwatch.pause()
         self.breakStopwatch.remaining_time = 0
         self.breakStopwatch.in_bonus = False
         self.breakStopwatch.bonus_time = 0
+    
+        
+    def toggle_focus_frames(self, event=None, frame_name=None):
+        """
+        Toggles between the distraction and problem-solving frames.
+        Args:
+            event: Optional, triggered by a button press or binding.
+            frame_name: The name of the frame to toggle ('distraction' or 'problem_solving').
+        """
+        # Define the frames dictionary
+        frames = {
+            "distraction": self.focus_distraction_frame,
+            "problem_solving": self.focus_problemsolving_frame,
+        }
+
+        # Determine the frame to toggle
+        requested_frame = frames.get(frame_name)
+
+        if frame_name == "distraction":
+            # Increment the distraction counter when toggling the distraction frame ON
+            if frame_name == "distraction" and self.active_frame != requested_frame:
+                self.numOfDistraction += 1
+
+        # If no frame is active, or the same frame is requested, toggle visibility
+        if self.active_frame is None:
+            requested_frame.pack(fill="both", expand=True, before=self.focus_button_frame)
+            self.active_frame = requested_frame
+        elif self.active_frame == requested_frame:
+            requested_frame.pack_forget()
+            self.active_frame = None
+        else:
+            # If a different frame is active, hide it and show the requested one
+            self.active_frame.pack_forget()
+            requested_frame.pack(fill="both", expand=True)
+            self.active_frame = requested_frame
+
+        # Adjust the window size to fit the updated layout
+        self.master.update_idletasks()  # Refresh geometry calculations
+        self.master.geometry("")  # Let Tkinter automatically resize the window
+
 
     def toggle_sound(self, state=" "):
+        
         if state == " ":
             self.sound_enabled = not self.sound_enabled
             self.toggle_sound_button.config(text="DISABLE SOUND" if self.sound_enabled else "ENABLE SOUND")
@@ -400,23 +615,91 @@ class PomodoroApp:
         else:
             self.tick_channel.stop()
 
-
 def format_time(seconds):
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     seconds = int(seconds % 60)
     return f"{hours:02}:{minutes:02}:{seconds:02}"
-
-
 def send_notification(title, message):
     notification.notify(
         title=title,
         message=message,
         app_name="Pomodoro Timer"
     )
+def newTab(notebook):
+    # Create a new frame for the new tab
+    new_frame = tk.Frame(notebook)
+
+    # Create a new head for this tab
+    new_head = metaBox(new_frame, word="New Tree Root")
+
+    # Add the new tab and associate the head
+    notebook.add_tab(new_frame, new_head)
+
+def initializeBorderButtons(master,frame):
+    menu = tk.Menu(master)
+    master.config(menu = menu) 
+
+    subMenu = tk.Menu(menu,tearoff = 0) # creating a menu item within the menu
+    transparentMenu = tk.Menu(menu,tearoff = 0)
+
+    menu.add_cascade(label = "Edit", menu = subMenu) #Name of drop down menu
+    menu.add_cascade(label = "Transparancy",  menu = transparentMenu)
+    # subMenu.add_command(label = "new Tab", command = lambda: newTab(master))
+    subMenu.add_command(label="new Tab", command=lambda: newTab(notebook))
+    # subMenu.add_command(label = "save", command = save)
+    # subMenu.add_command(label = "Open", command = lambda: openTheFile(frame))
+    subMenu.add_separator()
+    subMenu.add_command(label = "Exit", command =lambda: sys.exit(1))
+
+    transparentMenu.add_command(label = "30%",command = lambda: changeRootTransparency(master,0.3))
+    transparentMenu.add_command(label = "50%",command =lambda: changeRootTransparency(master,0.5) )
+    transparentMenu.add_command(label = "60%",command = lambda: changeRootTransparency(master,0.6))
+    transparentMenu.add_command(label = "70%",command = lambda: changeRootTransparency(master,0.7))
+    transparentMenu.add_command(label = "80%",command = lambda: changeRootTransparency(master,0.8))
+    transparentMenu.add_command(label = "100%",command = lambda: changeRootTransparency(master,1.0))	
+def changeRootTransparency(master,percentage):
+    root.attributes("-alpha",percentage)
+
+
+def initializeScollbar(master):
+    mainCanvas.grid(row = 1,column = 0,sticky = "ew")
+    mainCanvas.bind_all("<MouseWheel>", _on_mousewheel)
+    vsb.grid(column = 1,row = 1,sticky = "news")	
+    hsb.grid(column=0,row = 2,sticky = "ew")
+    vsb.rowconfigure(0, weight=1)
+    hsb.columnconfigure(0, weight=1)
+    mainCanvas.configure(yscrollcommand=vsb.set,xscrollcommand = hsb.set,height = master.winfo_screenheight()-120,width = master.winfo_screenwidth()-20,yscrollincrement = '2',xscrollincrement = '2')	
+    mainCanvas.create_window((12,12), window=frame, anchor="nw")
+    frame.bind("<Configure>", lambda event, canvas=mainCanvas: onFrameConfigure(mainCanvas))
+	# mainCanvas.configure(yscrollincrement='2')
+def onFrameConfigure(canvas):
+    '''Reset the scroll region to encompass the inner frame'''
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
 
 if __name__ == "__main__":
+   
     root = ThemedTk(theme="equilux")
+    root.title("Drip Dropper")
+    root.configure(background='#383838')
+    
+
+    # root.geometry('%sx%s' % (root.winfo_screenwidth(),root.winfo_screenwidth()))
+    mainCanvas = tk.Canvas(root, background = 'black')
+    frame = tk.Frame(mainCanvas, background="black")
+    framelst = []
+    # vsb = tk.Scrollbar(root, orient="vertical",command=mainCanvas.yview)
+    # hsb = tk.Scrollbar(root, orient="horizontal",command=mainCanvas.xview)
+    mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
+    root.attributes("-alpha",1.0)
+    # initializeScollbar(root)
+    # notebook = CustomNotebook(frame)
+    # notebook.pack()
+    # newTab(notebook)
+    # initializeBorderButtons(root,frame)
+
     app = PomodoroApp(root)
+
+
     root.mainloop()
