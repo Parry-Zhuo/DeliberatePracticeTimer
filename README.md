@@ -1,12 +1,12 @@
 This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my life
 
-What is deliberate practice?
+**What is deliberate practice?**
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
 focused, goal-oriented practice that targets specific weaknesses, incorporates immediate feedback, and pushing comfort zones.
 
 <img src="https://github.com/user-attachments/assets/d0338e53-48b1-493d-a38b-8ca59df22748" alt="Description of image" width="500"/>
 
-Deliberate Practice Tracker App
+**Deliberate Practice Tracker App**
 Purpose: This app seeks to aid users in applying deliberate practice by creating a platform to easily label specific tasks they are performing, providing immediate feedback, while saving the data
 for the future to allow users to easil define trends in their practice.
 
