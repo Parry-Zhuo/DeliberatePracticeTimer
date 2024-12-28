@@ -1,5 +1,3 @@
-This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my life
-
 **What is deliberate practice?**
 
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
@@ -32,5 +30,5 @@ All data is automatically uploaded to a Google Sheet using the Google Sheets API
 ![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
 
 
-
+This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my practices
 
