@@ -1,3 +1,5 @@
+This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my life
+
 What is deliberate practice?
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
 focused, goal-oriented practice that targets specific weaknesses, incorporates immediate feedback, and pushing comfort zones.
@@ -30,4 +32,4 @@ All data is automatically uploaded to a Google Sheet using the Google Sheets API
 
 
 
-This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my schoolwork.
+
