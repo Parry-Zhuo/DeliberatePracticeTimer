@@ -24,7 +24,7 @@ Key Features:
 
 
 
-All data will automatically be uploaded onto a google sheets that is connected to the cloud. Through usage of the google sheets API.
+All data is automatically uploaded to a Google Sheet using the Google Sheets API, ensuring seamless cloud connectivity.
 
 ![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
 
