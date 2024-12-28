@@ -20,7 +20,7 @@ Key Features:
 
 **Time Logging**: A straightforward start/stop timer helps track the duration of each practice session.
 
-**Distraction Logging**: Users can log instances of distractions, categorizing them by short and long interruptions, to better understand and manage their focus.
+**Distraction Logging**: Users can log instances of distractions, to better understand and manage their focus.
 
 
 
