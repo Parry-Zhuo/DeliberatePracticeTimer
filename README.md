@@ -24,10 +24,9 @@ Key Features:
 
 
 
-All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to log in data and reflect upon their habits from different computers.
+All data will automatically be uploaded onto a google sheets that is connected to the cloud. Through usage of the google sheets API.
 
 
 
 
-This is a project I created for my "introduction to python" 4 week course, where I was assigned 2 days to create a project of my choosing in python.
-To create this app in such a timer period, I employed the usage of CHATGPT utilizing prompting techniques to aid in brainstorming, and coding this project.
+This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my schoolwork.
