@@ -10,14 +10,17 @@ import sys
 from tkinter import filedialog
 from tkinter import ttk
 
-class metaBox:# so our bug exists on the first nodes siblings.
-    def __init__(self, master,height=0,width=0,word= "",child= None,parent = None, sibling= None):
+
+class MetaBox:# so our bug exists on the first nodes siblings.
+    def __init__(self, master,height=0,width=0,word= "",child= None,parent = None, sibling= None,head = None, app=None):
         self.master = master
         self.child = child 
         self.parent = parent
         self.sibling = sibling
         self.width=width
-        self.height=height	
+        self.height=height
+        self.head = self if head is None else head
+        self.app = app
         self.txtBox(word)
         # frame.grid_columnconfigure(width*2,minsize=40)
         # print(self.txt.grid_info())
@@ -38,10 +41,8 @@ class metaBox:# so our bug exists on the first nodes siblings.
     def moveUp(self,event):
         if(self.parent):
             self.parent.txt.focus()
-
-    def setHead(self, newHead):
-         global head
-         head = newHead
+            self.app.scroll_to_widget(self.parent.txt)
+            
 
     def moveDown(self):
         curr = self
@@ -50,31 +51,37 @@ class metaBox:# so our bug exists on the first nodes siblings.
         sortButtons(curr,0,0)
 
     def insertSibling(self,event):
-        head = notebook.get_head(notebook.select())  # Get the current head
+        # head = notebook.get_head(notebook.select())  # Get the current head
         if(self.sibling):
             #self=self.sibling
-            print("sibling")
+            # print("sibling")
             self.sibling.txt.focus()
+            self.app.scroll_to_widget(self.sibling.txt)
             return
-        bob = metaBox(self.master,self.height+1,self.width,parent = self)
-        self.sibling = bob
-        mainCanvas.yview_scroll(100, "units")
-        sortButtons(head,0,0)
+        newNode = MetaBox(self.master,self.height+1,self.width,parent = self,head = self.head, app = self.app)
+        self.sibling = newNode
+        # mainCanvas.yview_scroll(100, "units")
+        
+        sortButtons(self.head,0,0)
+        self.app.scroll_to_widget(newNode.txt)
 
     def insertChild(self,event):
-        head = notebook.get_head(notebook.select())  # Get the current head
+        # head = notebook.get_head(notebook.select())  # Get the current head
         if (self.child):
             self.child.txt.focus() 
+            self.app.scroll_to_widget(self.child.txt)
             return
-        nextNode = metaBox(self.master,self.height+1,self.width+1,parent = self)
+            
+        nextNode = MetaBox(self.master,self.height+1,self.width+1,parent = self,head = self.head, app = self.app)
         self.child = nextNode
-        sortButtons(head,0,0)#what's the purpose of this? Well looks through all the buttons EVERY SINGLE ONE. Determines the num of descendents then can you  you know.
-		
+        sortButtons(self.head,0,0)#what's the purpose of this? Well looks through all the buttons EVERY SINGLE ONE. Determines the num of descendents then can you  you know.
+        self.app.scroll_to_widget(nextNode.txt)
+
     def deleteSelf(self,event):#deletes itself as well as all descendents of self
-        head = notebook.get_head(notebook.select())  # Get the current head
+        # head = notebook.get_head(notebook.select())  # Get the current head
         #to simplify program we are removing DFS/BFS in delete self and simply not allowing
         #NODE NOT ALLOWED TO BE DELETED IF HAS CHILDREN
-        if(self.child is not None or self is head):#here we are seeing if it has children so we can delete it and the rest of it's descendents using dfs
+        if(self.child is not None or self is self.head):#here we are seeing if it has children so we can delete it and the rest of it's descendents using dfs
             # deleteThis.append(self.child)
             # self.child=None
             return;
@@ -111,29 +118,15 @@ class metaBox:# so our bug exists on the first nodes siblings.
         #     curr = None # DELETES REFERENCE To child
         #     curr.parent = None
 
-        sortButtons(head,0,0) #reorganizes GUI to fit the new structure created
+        sortButtons(self.head,0,0) #reorganizes GUI to fit the new structure created
         self.parent.txt.focus()
 
-def insertNode(height,width):#inserts node into correct spot on tree given height and width
-    # global head
-    #bfs search
-    stack.append(head)
-    while stack:
-        curr = stack.pop(0) 
-        if((curr.child is not None) and (curr.child.height <=height) and (curr.child.width <=width)):
-            stack.append(curr.child)
-        if((curr.sibling is not None) and (curr.sibling.height <=height) and (curr.sibling.width <=width)):
-            stack.append(curr.sibling)
+
 def ancestor(curr,width):#traverses up until curr.width = width
     while(curr.width !=width):
         curr = curr.parent
     return curr
 
-
-			# else: # if the next node not a direct family member of curr
-	# printLinked(head)
-				
-		#we need to determine if it's a child, a sibling, or someone elses direct family.
 def traverse(curr,diction):#sorts in preorder
 	# if((curr.child is None) and (curr.sibling is None) and (curr is not None)):#deals with the end of a tree branch
 	# 	diction.append({"height": curr.height,"width": curr.width, "word": curr.word})
@@ -194,11 +187,11 @@ def initializeScollbar(master):
 def moveFocus(curr):
     curr.txt.focus_set()
 def printLinked(head):
-    print(str(head.height) + " " + str(head.width) + " " + head.word)
-    if head.child is not None:
-        printLinked(head.child)
-    if head.sibling is not None:
-        printLinked(head.sibling)
+    print(str(self.head.height) + " " + str(selffhead.width) + " " + self.head.word)
+    if selfhead.child is not None:
+        printLinked(self.head.child)
+    if self.head.sibling is not None:
+        printLinked(self.head.sibling)
 def countChildren(curr):#counts number of descendents 
 	count = 0
 	stack = []
@@ -214,17 +207,7 @@ def countChildren(curr):#counts number of descendents
 			stack.append(noder.sibling)
 			count+=1
 	return count
-def NodeExists(height,width,start,Frame):#searches if the Node exists within the tree
-    curr = start
-    stack  = []
-    while curr:
-        if(curr.height == height) and (curr.width == width):
-            return curr
-        if curr.child is not None:
-            stack.append(curr.child)
-        if curr.sibling is not None:
-            stack.append(curr.sibling)
-    return metaBox(Frame,self.height+1,self.width+1,parent = self)
+
 # @@@@@@@@@@@@@@@@@ THIS IS WHERE MENU METHODS START@@@@@@@@@@@@@@@@
 def initializeBorderButtons(master,frame):
     menu = tk.Menu(master)
@@ -236,7 +219,7 @@ def initializeBorderButtons(master,frame):
     menu.add_cascade(label = "Edit", menu = subMenu) #Name of drop down menu
     menu.add_cascade(label = "Transparancy",  menu = transparentMenu)
     # subMenu.add_command(label = "new Tab", command = lambda: newTab(master))
-    subMenu.add_command(label="new Tab", command=lambda: newTab(notebook))
+    # subMenu.add_command(label="new Tab", command=lambda: newTab(notebook))
     subMenu.add_command(label = "save", command = save)
     subMenu.add_command(label = "Open", command = lambda: openTheFile(frame))
     subMenu.add_separator()
@@ -255,19 +238,18 @@ def newTab(notebook):
     new_frame = tk.Frame(notebook)
 
     # Create a new head for this tab
-    new_head = metaBox(new_frame)
+    new_head = MetaBox(new_frame)
 
     # Add the new tab and associate the head
     notebook.add_tab(new_frame, new_head)
 
-def save():
+def save(newHead):
     file = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
-    global head
-    copyOfT = copy.copy(head)#copies the entire tree onto copyOfT
+    copyOfT = copy.copy(newHead)#copies the entire tree onto copyOfT
     curr = copyOfT
     diction = {}
     diction["bob"]= []
-    curr.word = head.txt.get("1.0",tk.END)
+    curr.word = newHead.txt.get("1.0",tk.END)
     diction["bob"].append({"height": curr.height,"width": curr.width, "word": curr.word.strip("\r\n")})
     hold = traverse(curr,diction["bob"])
     json.dump(hold,file,indent = 4)
@@ -279,19 +261,19 @@ def openTheFile(master):
 		return
 	with open(filePath) as json_file:  
 		data = json.load(json_file)
-		global head
-		head = metaBox(master,data[0]["height"],data[0]["width"],data[0]["word"])
-		curr = head
+		newHead = None
+		newHead = MetaBox(master,data[0]["height"],data[0]["width"],data[0]["word"],head  = newHead)
+		curr = newHead
 		descendentCounter = 0
 		for index in range(1,len(data)):
 			if((curr.height+1 == data[index]["height"]) and (curr.width+1==data[index]["width"])):#if the next node is a child to curr
-				bob = metaBox(master,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr)
+				bob = MetaBox(master,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr)
 				curr.child = bob
 				curr = curr.child
 				print("child found")
 			elif(curr.width+1 != data[index]["width"]):#it's a sibling to someone therefore width between curr and next node are the same
 				curr = ancestor(curr,data[index]["width"])
-				bob = metaBox(master,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr)
+				bob = MetaBox(master,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr)
 				bob.parent.sibling = bob
 				curr = curr.sibling
 				print("sibling found")
@@ -306,30 +288,142 @@ def openTheFile(master):
 #     toolbar.grid(row=0,column=0)
 ######METHOD
 
+# if __name__ == "__main__":
+#     root = tk.Tk() 
+#     root.geometry('%sx%s' % (root.winfo_screenwidth(), root.winfo_screenwidth()))
+
+#     mainCanvas = tk.Canvas(root, background="black")
+#     frame = tk.Frame(mainCanvas, background="black")
+
+#     vsb = tk.Scrollbar(root, orient="vertical", command=mainCanvas.yview)
+#     hsb = tk.Scrollbar(root, orient="horizontal", command=mainCanvas.xview)
+
+#     mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
+#     root.attributes("-alpha", 0.8)
+
+#     initializeScollbar(root)
+#     newHead = MetaBox(frame)
+
+#     # Initialize the notebook
+#     # notebook = CustomNotebook(frame)
+#     # notebook.pack()
+
+#     # Pass the notebook to initializeBorderButtons
+#     initializeBorderButtons(root, frame)
+
+#     # Create the first tab
+#     # newTab(notebook)
+
+#     root.mainloop()
+
+class MetaBoxApp:
+    def __init__(self, parent):
+        # Use parent instead of root
+        self.parent = parent
+
+        self.canvas = tk.Canvas(self.parent, background="black")
+        self.frame = tk.Frame(self.canvas, background="black")
+
+        self.vsb = tk.Scrollbar(self.parent, orient="vertical", command=self.canvas.yview)
+        self.hsb = tk.Scrollbar(self.parent, orient="horizontal", command=self.canvas.xview)
+        self.canvas.configure(yscrollcommand=self.vsb.set, xscrollcommand=self.hsb.set)
+
+        self.canvas.grid(row=0, column=0, sticky="nsew")
+        self.vsb.grid(row=0, column=1, sticky="ns")
+        self.hsb.grid(row=1, column=0, sticky="ew")
+        self.canvas.create_window((0, 0), window=self.frame, anchor="nw")
+        self.frame.bind("<Configure>", self.on_frame_configure)
+        self.parent.grid_rowconfigure(0, weight=1)
+        self.parent.grid_columnconfigure(0, weight=1)
+
+        self.head = MetaBox(self.frame,app = self)
+        # self.initialize_menu()
+
+    def on_frame_configure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def initialize_menu(self):
+        menu = tk.Menu(self.root)
+        self.root.config(menu=menu)
+
+        file_menu = tk.Menu(menu, tearoff=0)
+        menu.add_cascade(label="File", menu=file_menu)
+        file_menu.add_command(label="Save", command=self.save)
+        file_menu.add_command(label="Open", command=self.open_file)
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=self.root.quit)
+
+    def save(self):
+        file = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+        if not file:
+            return
+
+        data = []
+        self.head.traverse(data)
+        json.dump(data, file, indent=4)
+        file.close()
+
+    def open_file(self):
+        file_path = filedialog.askopenfilename()
+        if not file_path:
+            return
+
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+
+        self.head = MetaBox(self.frame, word=data[0]['word'])
+        current = self.head
+
+        for node in data[1:]:
+            if node['height'] > current.height:
+                current = MetaBox(self.frame, word=node['word'], parent=current)
+                current.parent.child = current
+            else:
+                while current.height >= node['height']:
+                    current = current.parent
+                current = MetaBox(self.frame, word=node['word'], parent=current.parent)
+                current.parent.sibling = current
+
+    def on_frame_configure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    # def scroll_to_widget(self, widget = None,xMovement = 0,yMovement = 0):
+    #     # self.canvas.update_idletasks()
+    #     self.canvas.yview_scroll(yMovement, "page")
+    #     self.canvas.xview_scroll(xMovement, "units")
+    def scroll_to_widget(self, widget):
+        # Ensure the canvas and elements are updated
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.canvas.update_idletasks()
+
+
+        # Get canvas dimensions (viewport dimensions)
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+
+        # Get the bounding box of all canvas content
+        canvas_bbox = self.canvas.bbox("all")
+        if not canvas_bbox:
+            return  # No content in canvas, do nothing
+
+        canvas_total_width = canvas_bbox[2]  # Total content width
+        canvas_total_height = canvas_bbox[3]  # Total content height
+
+        # Calculate the target scroll positions to center the widget
+        widget_center_x = widget.winfo_x() + widget.winfo_width() / 2
+        scroll_x = max(0, min((widget_center_x) / canvas_total_width, 1))
+
+        widget_center_y = widget.winfo_y() + widget.winfo_height() / 2
+        scroll_y = max(0, min((widget_center_y) / canvas_total_height, 1))
+        
+        print(scroll_y)
+
+        # Scroll canvas to center the widget
+        self.canvas.xview_moveto(scroll_x)
+        self.canvas.yview_moveto(scroll_y)
+
+
 if __name__ == "__main__":
-    root = tk.Tk() 
-    root.geometry('%sx%s' % (root.winfo_screenwidth(), root.winfo_screenwidth()))
-
-    mainCanvas = tk.Canvas(root, background="black")
-    frame = tk.Frame(mainCanvas, background="black")
-
-    vsb = tk.Scrollbar(root, orient="vertical", command=mainCanvas.yview)
-    hsb = tk.Scrollbar(root, orient="horizontal", command=mainCanvas.xview)
-
-    mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
-    root.attributes("-alpha", 0.8)
-
-    initializeScollbar(root)
-
-    # Initialize the notebook
-    notebook = CustomNotebook(frame)
-    notebook.pack()
-
-    # Pass the notebook to initializeBorderButtons
-    initializeBorderButtons(root, notebook)
-
-    # Create the first tab
-    newTab(notebook)
-
+    root = tk.Tk()
+    app = MetaBoxApp(root)
     root.mainloop()
-

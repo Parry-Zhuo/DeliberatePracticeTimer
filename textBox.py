@@ -73,6 +73,9 @@ class AutoResizedText(tk.Frame):
 			self.text_box.insert(INSERT, word[x])
 
 	@property
+	def bbox(self):
+		return self.text_box.bbox()
+
 	def tag(self):
 		return self._autoresize_text_tag
 

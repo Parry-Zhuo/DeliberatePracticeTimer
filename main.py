@@ -9,11 +9,9 @@ from ttkthemes import ThemedTk
 import pygame
 from tkinter import ttk
 
-from selectedButton import metaBox
+from selectedButton import *
 import operator
 import json
-from textBox import AutoResizedText
-from customNotebook import CustomNotebook
 import copy
 import sys
 from tkinter import filedialog
@@ -80,8 +78,9 @@ class PomodoroApp:
         self.distractionTextBox = tk.Text(self.focus_distraction_frame, height=12, width=70)
         self.distractionTextBox.pack(pady=(5, 5))#, 
 
-        # Create and pack the metaBox before the button frame
-        head = metaBox(self.focus_problemsolving_frame)
+        # Create and pack the MetaBox before the button frame
+        # head = MetaBox(self.focus_problemsolving_frame)
+        self.meta_box_app = MetaBoxApp(self.focus_problemsolving_frame)
         # head.setHead(head)
 
         self.focus_frame_list = [self.focus_problemsolving_frame,self.focus_distraction_frame]
@@ -582,7 +581,7 @@ class PomodoroApp:
 
         # If no frame is active, or the same frame is requested, toggle visibility
         if self.active_frame is None:
-            requested_frame.pack(fill="both", expand=True, before=self.focus_button_frame)
+            requested_frame.pack(fill="both", expand=True, after=self.focus_button_frame)
             self.active_frame = requested_frame
         elif self.active_frame == requested_frame:
             requested_frame.pack_forget()
@@ -590,7 +589,7 @@ class PomodoroApp:
         else:
             # If a different frame is active, hide it and show the requested one
             self.active_frame.pack_forget()
-            requested_frame.pack(fill="both", expand=True)
+            requested_frame.pack(fill="both", expand=True, after=self.focus_button_frame)
             self.active_frame = requested_frame
 
         # Adjust the window size to fit the updated layout
@@ -626,15 +625,15 @@ def send_notification(title, message):
         message=message,
         app_name="Pomodoro Timer"
     )
-def newTab(notebook):
-    # Create a new frame for the new tab
-    new_frame = tk.Frame(notebook)
+# def newTab(notebook):
+#     # Create a new frame for the new tab
+#     new_frame = tk.Frame(notebook)
 
-    # Create a new head for this tab
-    new_head = metaBox(new_frame, word="New Tree Root")
+#     # Create a new head for this tab
+#     new_head = MetaBox(new_frame, word="New Tree Root")
 
-    # Add the new tab and associate the head
-    notebook.add_tab(new_frame, new_head)
+#     # Add the new tab and associate the head
+#     notebook.add_tab(new_frame, new_head)
 
 def initializeBorderButtons(master,frame):
     menu = tk.Menu(master)
@@ -646,7 +645,7 @@ def initializeBorderButtons(master,frame):
     menu.add_cascade(label = "Edit", menu = subMenu) #Name of drop down menu
     menu.add_cascade(label = "Transparancy",  menu = transparentMenu)
     # subMenu.add_command(label = "new Tab", command = lambda: newTab(master))
-    subMenu.add_command(label="new Tab", command=lambda: newTab(notebook))
+    # subMenu.add_command(label="new Tab", command=lambda: newTab(notebook))
     # subMenu.add_command(label = "save", command = save)
     # subMenu.add_command(label = "Open", command = lambda: openTheFile(frame))
     subMenu.add_separator()
@@ -694,9 +693,7 @@ if __name__ == "__main__":
     mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
     root.attributes("-alpha",1.0)
     # initializeScollbar(root)
-    notebook = CustomNotebook(frame)
-    notebook.pack()
-    newTab(notebook)
+
     initializeBorderButtons(root,frame)
 
     app = PomodoroApp(root)
