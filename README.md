@@ -1,10 +1,11 @@
-What is deliberate practice?
+**What is deliberate practice?**
+
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
 focused, goal-oriented practice that targets specific weaknesses, incorporates immediate feedback, and pushing comfort zones.
 
 <img src="https://github.com/user-attachments/assets/d0338e53-48b1-493d-a38b-8ca59df22748" alt="Description of image" width="500"/>
 
-Deliberate Practice Tracker App
+**Deliberate Practice Tracker App**
 Purpose: This app seeks to aid users in applying deliberate practice by creating a platform to easily label specific tasks they are performing, providing immediate feedback, while saving the data
 for the future to allow users to easil define trends in their practice.
 
@@ -20,14 +21,15 @@ Key Features:
 
 **Time Logging**: A straightforward start/stop timer helps track the duration of each practice session.
 
-**Distraction Logging**: Users can log instances of distractions, categorizing them by short and long interruptions, to better understand and manage their focus.
+**Distraction Logging**: Users can log instances of distractions while focusing, allowing attention to be diverted back to task while understanding patterns in behaviour.
 
 
 
-All data will automatically be uploaded onto an excel sheet that is connected to the cloud. Allowing for users to log in data and reflect upon their habits from different computers.
+All data is automatically uploaded to a Google Sheet using the Google Sheets API, ensuring seamless cloud connectivity.
+
+![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
 
 
+This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my practices. 
+CHATGPT was extensively used in the making of this project to increase development time substantially.
 
-
-This is a project I created for my "introduction to python" 4 week course, where I was assigned 2 days to create a project of my choosing in python.
-To create this app in such a timer period, I employed the usage of CHATGPT utilizing prompting techniques to aid in brainstorming, and coding this project.
