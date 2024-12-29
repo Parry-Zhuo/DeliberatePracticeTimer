@@ -255,7 +255,7 @@ def newTab(notebook):
     new_frame = tk.Frame(notebook)
 
     # Create a new head for this tab
-    new_head = metaBox(new_frame, word="New Tree Root")
+    new_head = metaBox(new_frame)
 
     # Add the new tab and associate the head
     notebook.add_tab(new_frame, new_head)
@@ -332,3 +332,4 @@ if __name__ == "__main__":
     newTab(notebook)
 
     root.mainloop()
+

@@ -694,10 +694,10 @@ if __name__ == "__main__":
     mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
     root.attributes("-alpha",1.0)
     # initializeScollbar(root)
-    # notebook = CustomNotebook(frame)
-    # notebook.pack()
-    # newTab(notebook)
-    # initializeBorderButtons(root,frame)
+    notebook = CustomNotebook(frame)
+    notebook.pack()
+    newTab(notebook)
+    initializeBorderButtons(root,frame)
 
     app = PomodoroApp(root)
 
