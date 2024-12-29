@@ -31,5 +31,5 @@ All data is automatically uploaded to a Google Sheet using the Google Sheets API
 
 
 This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my practices. 
-CHATGPT was extensively used in the making of this project to increase development time
+CHATGPT was extensively used in the making of this project to decrease development time
 
