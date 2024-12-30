@@ -12,6 +12,47 @@ from tkinter import ttk
 from ttkthemes import ThemedTk
 
 class MetaBox:# so our bug exists on the first nodes siblings.
+    """
+    @class MetaBox
+    @brief Represents a single node in a hierarchical tree structure of text boxes.
+
+    Each MetaBox represents a text box that can have child, sibling, or parent nodes, forming a hierarchical organization. 
+    It supports operations like adding siblings or children, deleting nodes, and navigating the tree structure.
+
+    @section Features
+    - Dynamic creation of sibling and child nodes.
+    - Automatic resizing of text boxes based on their content.
+    - Interaction with keyboard shortcuts:
+        - Shift + Delete: Deletes the current node (if no children).
+        - Shift + Up: Moves focus to the parent node.
+        - Shift + Down: Adds a sibling node.
+        - Shift + Right: Adds a child node.
+
+    @section Methods
+    - __init__(master, height=0, width=0, word="", child=None, parent=None, sibling=None, head=None, app=None): 
+      Initializes the MetaBox instance with optional parent, sibling, or child nodes.
+    - txtBox(word): Creates a resizable text box for the node.
+    - moveUp(event): Moves the focus to the parent node.
+    - moveDown(): Moves to the root node of the current tree.
+    - insertSibling(event): Creates and inserts a sibling node.
+    - insertChild(event): Creates and inserts a child node.
+    - deleteSelf(event): Deletes the current node and disconnects it from the tree.
+
+    @section Attributes
+    - master: The parent tkinter widget for this node.
+    - height: The height level of the node in the tree.
+    - width: The horizontal position of the node in the tree.
+    - word: The text content of the node.
+    - child: The first child node of this MetaBox.
+    - parent: The parent node of this MetaBox.
+    - sibling: The next sibling node of this MetaBox.
+    - head: The root of the current tree.
+    - app: The MetaBoxApp instance managing this MetaBox.
+
+    @note This class relies on the `AutoResizedText` widget for text box functionality.
+    """
+
+
     def __init__(self, master,height=0,width=0,word= "",child= None,parent = None, sibling= None,head = None, app=None):
         self.master = master
         self.child = child 
@@ -140,9 +181,19 @@ def traverse(curr,diction):#sorts in preorder
         diction.append({"height": curr.sibling.height,"width": curr.sibling.width, "word": word.strip("\r\n")})
         traverse(curr.sibling,diction)
     return diction	
-def sortButtons(curr,height,width):#this sorts out bobs starting from curr(usually head)
+"""
+@brief  Adjusts the positions of MetaBox nodes in a tree structure such that it is sorted in pre-order using DFS.
+
+Recursively traverses the tree in pre-order to calculate and update the grid positions (height and width) 
+of each MetaBox node, ensuring they are properly positioned in the tkinter layout.
+
+@param curr The current MetaBox node being processed.
+@param height The vertical level (row) of the current node.
+@param width The horizontal position (column) of the current node.
+"""
+def sortButtons(curr,height,width):
 	if curr.child is not None:
-		sortButtons(curr.child,height+1,width+1)#for each bob created from this child temp will increase by
+		sortButtons(curr.child,height+1,width+1)
 	if curr.sibling is not None:
 		temp1=countChildren(curr)+1
 		sortButtons(curr.sibling,height+temp1,width)
@@ -171,28 +222,10 @@ def onFrameConfigure(canvas):
     '''Reset the scroll region to encompass the inner frame'''
     canvas.configure(scrollregion=canvas.bbox("all"))
 
-def _on_mousewheel(event):
-    mainCanvas.yview_scroll(-1*(int)(event.delta/40), "units")
-
-def initializeScollbar(master):
-    mainCanvas.grid(row = 1,column = 0,sticky = "ew")
-    mainCanvas.bind_all("<MouseWheel>", _on_mousewheel)
-    vsb.grid(column = 1,row = 1,sticky = "news")	
-    hsb.grid(column=0,row = 2,sticky = "ew")
-    vsb.rowconfigure(0, weight=1)
-    hsb.columnconfigure(0, weight=1)
-    mainCanvas.configure(yscrollcommand=vsb.set,xscrollcommand = hsb.set,height = master.winfo_screenheight()-120,width = master.winfo_screenwidth()-20,yscrollincrement = '2',xscrollincrement = '2')	
-    mainCanvas.create_window((12,12), window=frame, anchor="nw")
-    frame.bind("<Configure>", lambda event, canvas=mainCanvas: onFrameConfigure(mainCanvas))
 	# mainCanvas.configure(yscrollincrement='2')
 def moveFocus(curr):
     curr.txt.focus_set()
-def printLinked(head):
-    print(str(self.head.height) + " " + str(selffhead.width) + " " + self.head.word)
-    if selfhead.child is not None:
-        printLinked(self.head.child)
-    if self.head.sibling is not None:
-        printLinked(self.head.sibling)
+
 def countChildren(curr):#counts number of descendents 
 	count = 0
 	stack = []
@@ -209,79 +242,52 @@ def countChildren(curr):#counts number of descendents
 			count+=1
 	return count
 
-# @@@@@@@@@@@@@@@@@ THIS IS WHERE MENU METHODS START@@@@@@@@@@@@@@@@
-def initializeBorderButtons(master,frame):
-    menu = tk.Menu(master)
-    master.config(menu = menu) 
-
-    subMenu = tk.Menu(menu,tearoff = 0) # creating a menu item within the menu
-    transparentMenu = tk.Menu(menu,tearoff = 0)
-
-    menu.add_cascade(label = "Edit", menu = subMenu) #Name of drop down menu
-    menu.add_cascade(label = "Transparancy",  menu = transparentMenu)
-    # subMenu.add_command(label = "new Tab", command = lambda: newTab(master))
-    # subMenu.add_command(label="new Tab", command=lambda: newTab(notebook))
-    subMenu.add_command(label = "save", command = save)
-    subMenu.add_command(label = "Open", command = lambda: openTheFile(frame))
-    subMenu.add_separator()
-    subMenu.add_command(label = "Exit", command =lambda: sys.exit(1))
-
-    transparentMenu.add_command(label = "30%",command = lambda: changeRootTransparency(master,0.3))
-    transparentMenu.add_command(label = "50%",command =lambda: changeRootTransparency(master,0.5) )
-    transparentMenu.add_command(label = "60%",command = lambda: changeRootTransparency(master,0.6))
-    transparentMenu.add_command(label = "70%",command = lambda: changeRootTransparency(master,0.7))
-    transparentMenu.add_command(label = "80%",command = lambda: changeRootTransparency(master,0.8))
-    transparentMenu.add_command(label = "100%",command = lambda: changeRootTransparency(master,1.0))	
-def changeRootTransparency(master,percentage):
-    root.attributes("-alpha",percentage)
-def newTab(notebook):
-    # Create a new frame for the new tab
-    new_frame = tk.Frame(notebook)
-
-    # Create a new head for this tab
-    new_head = MetaBox(new_frame)
-
-    # Add the new tab and associate the head
-    notebook.add_tab(new_frame, new_head)
-
-
-# @@@@@@@@@@@@@@@@@ THIS IS WHERE MENU METHODS END@@@@@@@@@@@@@@@@
-# def createToolBar(master):
-#     toolbar = tk.Frame(master, bg = "yellow")
-#     insertButt= tk.Button(toolbar,text="button")
-#     insertButt.pack(side = tk.LEFT)
-#     toolbar.grid(row=0,column=0)
-######METHOD
-
-# if __name__ == "__main__":
-#     root = tk.Tk() 
-#     root.geometry('%sx%s' % (root.winfo_screenwidth(), root.winfo_screenwidth()))
-
-#     mainCanvas = tk.Canvas(root, background="black")
-#     frame = tk.Frame(mainCanvas, background="black")
-
-#     vsb = tk.Scrollbar(root, orient="vertical", command=mainCanvas.yview)
-#     hsb = tk.Scrollbar(root, orient="horizontal", command=mainCanvas.xview)
-
-#     mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
-#     root.attributes("-alpha", 0.8)
-
-#     initializeScollbar(root)
-#     newHead = MetaBox(frame)
-
-#     # Initialize the notebook
-#     # notebook = CustomNotebook(frame)
-#     # notebook.pack()
-
-#     # Pass the notebook to initializeBorderButtons
-#     initializeBorderButtons(root, frame)
-
-#     # Create the first tab
-#     # newTab(notebook)
-
-#     root.mainloop()
-
 class MetaBoxApp:
+
+    """
+    @class MetaBoxApp
+    @brief A GUI application for creating and managing a hierarchical structure of text boxes using tkinter.
+    
+    The MetaBoxApp class provides a graphical interface where users can create, edit, delete, 
+    and organize a tree structure of MetaBoxes. Each text box (MetaBox) can have child or sibling nodes, 
+    forming a hierarchical tree.
+
+    This class supports the following functionality:
+    - Recursive creation of child and sibling text boxes.
+    - Saving and loading the tree structure to and from JSON files.
+    - Theming support with ttk and ThemedTk for better aesthetics.
+    - Scrollable canvas to navigate large tree structures.
+    - Dynamic updates to the tree structure when nodes are added or removed.
+
+    @note The class utilizes tkinter for the GUI, with additional styling provided by ThemedTk.
+
+    @section Usage
+    Instantiate the MetaBoxApp with a parent tkinter widget (typically the root window). 
+    Use the `open_file` and `save` methods to load and save tree structures.
+
+    Example:
+    @code
+    root = ThemedTk(theme="equilux")
+    app = MetaBoxApp(root)
+    root.mainloop()
+    @endcode
+
+    @section Dependencies
+    - tkinter
+    - ttk
+    - ThemedTk
+    - AutoResizedText (a custom widget)
+    - json for saving and loading data.
+
+    @section Methods
+    - __init__(parent): Initializes the MetaBoxApp instance.
+    - save(head): Saves the current tree structure to a file.
+    - open_file(): Opens a file and loads the tree structure.
+    - new_head(): Reinitializes the tree with a new head node.
+    - delete_tree(node): Recursively deletes the tree starting from a given node.
+    - scroll_to_widget(widget): Scrolls the canvas to bring a specific widget into view.
+    - on_frame_configure(event): Updates the scroll region dynamically.
+    """
     def __init__(self, parent):
         # Use parent instead of root
         self.parent = parent
@@ -353,10 +359,6 @@ class MetaBoxApp:
         with open(file_path, 'r') as file:
             data = json.load(file)
 
-        # # self.head = MetaBox(self.frame, word=data[0]['word'],app=self)
-        # self.head.txt.text_box.delete("1.0", tk.END)  # Clear any existing text in the head
-        # self.head.txt.text_box.insert("1.0", data[0]["word"])  # Set the new word
-        # Delete the existing tree
         self.delete_tree(self.head)
         self.head = MetaBox(self.frame,data[0]["height"],data[0]["width"],data[0]["word"],app = self)
         curr = self.head
@@ -364,19 +366,25 @@ class MetaBoxApp:
         descendentCounter = 0
         for index in range(1,len(data)):
             if((curr.height+1 == data[index]["height"]) and (curr.width+1==data[index]["width"])):#if the next node is a child to curr
-                bob = MetaBox(self.frame,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr,head = self.head,app = self)
-                curr.child = bob
+                curr.child = MetaBox(self.frame,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr,head = self.head,app = self)
                 curr = curr.child
                 print("child found")
             elif(curr.width+1 != data[index]["width"]):#it's a sibling to someone therefore width between curr and next node are the same
                 curr = ancestor(curr,data[index]["width"])
-                bob = MetaBox(self.frame,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr,head = self.head,app = self)
-                bob.parent.sibling = bob
+                newMetaBox = MetaBox(self.frame,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr,head = self.head,app = self)
+                newMetaBox.parent.sibling = newMetaBox
                 curr = curr.sibling
                 print("sibling found")
             else:
                 print("ERROR IN   " + str(data[index]["height"]) + " " + str(data[index]["width"]) +" " + str(data[index]["word"]) )
         self.on_frame_configure()
+    """
+    @brief Deletes previous head and descendents, then replaces it with a new head to reset tree.
+    """
+    def new_head(self):
+        self.delete_tree(self.head)
+        self.head = MetaBox(self.frame, app = self)
+        
     def delete_tree(self, node):
         """Recursively delete all nodes starting from the given node."""
         if node is None:
@@ -397,14 +405,11 @@ class MetaBoxApp:
         node.sibling = None
         node.parent = None
         print(f"Deleted node at height {node.height}, width {node.width}")
+        
     def on_frame_configure(self, event=None):
         """Update the scroll region to encompass all content."""
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
-    # def scroll_to_widget(self, widget = None,xMovement = 0,yMovement = 0):
-    #     # self.canvas.update_idletasks()
-    #     self.canvas.yview_scroll(yMovement, "page")
-    #     self.canvas.xview_scroll(xMovement, "units")
     def scroll_to_widget(self, widget):
         # Ensure the canvas and elements are updated
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))

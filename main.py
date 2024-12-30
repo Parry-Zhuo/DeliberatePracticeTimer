@@ -21,6 +21,52 @@ from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
 class PomodoroApp:
+    """
+    @brief Implements a Pomodoro Timer application with focus, contemplation, and reflection modes.
+
+    This class provides the core functionality for a Pomodoro timer application, 
+    allowing users to manage tasks, distractions, and reflections. It integrates with 
+    Google Sheets or Excel for data logging and includes sound effects and a user-friendly interface.
+
+    @details
+    Modes:
+    1. **Focus Mode**:
+        - Designed for users to concentrate on a specific task for a set duration.
+        - Features include:
+            - Ability to toggle between distraction and problem-solving frames.
+                - A problem-solving frame with MetaBox widgets for breaking down problems
+                - Distraction frame, to allow users to log distractions to better focus while practicing
+            - A countdown timer displaying the remaining focus time.
+            - End focus and discard focus options to either transition to reflection or return to contemplation.
+
+    2. **Contemplation Mode**:
+        - Prepares the user for focus mode by setting tasks, goals, and timers.
+        - Features include:
+            - Entry fields for task description, goal definition, and timer settings.
+            - Customizable focus and break durations.
+            - A "Switch to Focus" button to validate input and start the focus session.
+            - Error handling to ensure valid input before transitioning to focus mode.
+
+    3. **Reflection Mode**:
+        - Allows users to review their performance and record reflections after focus mode.
+        - Features include:
+            - Displays task, goal, and distraction counts during the session.
+            - A break timer to track resting periods.
+            - A text area for users to write reflections about their session.
+            - A satisfaction level input (1-10) for session rating.
+            - Options to save the reflection data into Google Sheets or Excel or discard changes.
+
+    Additional Features:
+    - **Sound Toggle**: Enables or disables ticking sounds for focus sessions.
+    - **Distraction Management**: Counts and tracks short and long distractions during focus mode.
+    - **Data Integration**:
+        - Authenticates with Google Sheets for data logging.
+        - Falls back to Excel-based logging in case of API issues.
+    - **Dynamic Layout**: Switches seamlessly between modes with auto-resizing and theme adjustments.
+    - **MetaBox Integration**: Provides a visual structure for problem-solving during focus mode.
+
+    @class PomodoroApp
+    """
     def __init__(self, master):
         # self.reflection_textbox_visible = False
         # self.problem_solving_frame_visible = False  # Frame visibility state
@@ -303,6 +349,10 @@ class PomodoroApp:
             self.contemplation_frame.pack_forget()
             self.reflection_frame.pack_forget()
             self.focus_frame.pack(fill='both', expand=True)
+        # print(self.meta_box_app.head)
+        # if(self.meta_box_app.head is None):
+            self.meta_box_app.new_head()
+
         self.master.update_idletasks()  # Refresh geometry calculations
         self.master.geometry("")  # Let Tkinter automatically resize the window
             
@@ -512,6 +562,9 @@ class PomodoroApp:
         print("Data inserted successfully into Excel.")
 
     def clear_form_fields(self):
+        #delete problemSolving METAboxes
+        
+
         # self.toggle_reflection_textbox(True)
         self.active_frame = None
         # Clear text in reflection labels
@@ -542,6 +595,7 @@ class PomodoroApp:
         # Reset break time label
         if hasattr(self, 'break_time_label'):
             self.break_time_label.config(text="00:00")
+        # self.meta_box_app.delete_tree(self.meta_box_app.head)
 
     def reset_and_pause_break_stopwatch(self):
         
@@ -653,22 +707,18 @@ if __name__ == "__main__":
     root = ThemedTk(theme="equilux")
     root.title("Drip Dropper")
     root.configure(background='#383838')
-    
 
-    # root.geometry('%sx%s' % (root.winfo_screenwidth(),root.winfo_screenwidth()))
+    app = PomodoroApp(root)
+    
     mainCanvas = tk.Canvas(root, background = 'black')
     frame = tk.Frame(mainCanvas, background="black")
     framelst = []
-    # vsb = tk.Scrollbar(root, orient="vertical",command=mainCanvas.yview)
-    # hsb = tk.Scrollbar(root, orient="horizontal",command=mainCanvas.xview)
+    
+
     mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
     root.attributes("-alpha",1.0)
 
-    global app
-    app = PomodoroApp(root)
     initializeBorderButtons(root,app.focus_problemsolving_frame,_appInstance = app)
 
-
-
-
+    root.geometry('400x250')
     root.mainloop()
