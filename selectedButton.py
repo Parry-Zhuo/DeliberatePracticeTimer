@@ -4,12 +4,12 @@ import json
 # import pdb
 #from settings import storemetaBox
 from textBox import AutoResizedText
-from customNotebook import CustomNotebook
+# from customNotebook import CustomNotebook
 import copy
 import sys
 from tkinter import filedialog
 from tkinter import ttk
-
+from ttkthemes import ThemedTk
 
 class MetaBox:# so our bug exists on the first nodes siblings.
     def __init__(self, master,height=0,width=0,word= "",child= None,parent = None, sibling= None,head = None, app=None):
@@ -22,6 +22,7 @@ class MetaBox:# so our bug exists on the first nodes siblings.
         self.head = self if head is None else head
         self.app = app
         self.txtBox(word)
+        
         # frame.grid_columnconfigure(width*2,minsize=40)
         # print(self.txt.grid_info())
     def txtBox(self,word):
@@ -107,7 +108,7 @@ class MetaBox:# so our bug exists on the first nodes siblings.
         elif self.parent.child == self:#only child
             # self.parent.sibling =None
             self.parent.child = None
-            print("no sibling")
+            # print("no sibling")
         # while deleteThis:
         #     curr = deleteThis.pop(0)
         #     curr.txt.destroy()
@@ -243,42 +244,6 @@ def newTab(notebook):
     # Add the new tab and associate the head
     notebook.add_tab(new_frame, new_head)
 
-def save(newHead):
-    file = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
-    copyOfT = copy.copy(newHead)#copies the entire tree onto copyOfT
-    curr = copyOfT
-    diction = {}
-    diction["bob"]= []
-    curr.word = newHead.txt.get("1.0",tk.END)
-    diction["bob"].append({"height": curr.height,"width": curr.width, "word": curr.word.strip("\r\n")})
-    hold = traverse(curr,diction["bob"])
-    json.dump(hold,file,indent = 4)
-    file.close()	
-
-def openTheFile(master):
-	filePath =  filedialog.askopenfilename()
-	if filePath == '':
-		return
-	with open(filePath) as json_file:  
-		data = json.load(json_file)
-		newHead = None
-		newHead = MetaBox(master,data[0]["height"],data[0]["width"],data[0]["word"],head  = newHead)
-		curr = newHead
-		descendentCounter = 0
-		for index in range(1,len(data)):
-			if((curr.height+1 == data[index]["height"]) and (curr.width+1==data[index]["width"])):#if the next node is a child to curr
-				bob = MetaBox(master,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr)
-				curr.child = bob
-				curr = curr.child
-				print("child found")
-			elif(curr.width+1 != data[index]["width"]):#it's a sibling to someone therefore width between curr and next node are the same
-				curr = ancestor(curr,data[index]["width"])
-				bob = MetaBox(master,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr)
-				bob.parent.sibling = bob
-				curr = curr.sibling
-				print("sibling found")
-			else:
-				print("ERROR IN   " + str(data[index]["height"]) + " " + str(data[index]["width"]) +" " + str(data[index]["word"]) )
 
 # @@@@@@@@@@@@@@@@@ THIS IS WHERE MENU METHODS END@@@@@@@@@@@@@@@@
 # def createToolBar(master):
@@ -321,8 +286,17 @@ class MetaBoxApp:
         # Use parent instead of root
         self.parent = parent
 
+        # Configure the ttk theme styles
+        style = ttk.Style()
+        style.configure('TCanvas', background='#383838')
+        style.configure('TFrame', background='#383838')
+
         self.canvas = tk.Canvas(self.parent, background="black")
         self.frame = tk.Frame(self.canvas, background="black")
+
+        # Apply the theme to Canvas and Frame
+        self.canvas = tk.Canvas(self.parent, background='#383838', highlightthickness=0)
+        self.frame = ttk.Frame(self.canvas, style='TFrame')
 
         self.vsb = tk.Scrollbar(self.parent, orient="vertical", command=self.canvas.yview)
         self.hsb = tk.Scrollbar(self.parent, orient="horizontal", command=self.canvas.xview)
@@ -336,11 +310,17 @@ class MetaBoxApp:
         self.parent.grid_rowconfigure(0, weight=1)
         self.parent.grid_columnconfigure(0, weight=1)
 
-        self.head = MetaBox(self.frame,app = self)
+        self.head = MetaBox(self.frame,app = self)  
+
+        self.canvas.bind_all("<MouseWheel>", self.on_mousewheel)  # Windows/macOS
+        
         # self.initialize_menu()
 
-    def on_frame_configure(self, event):
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def on_mousewheel(self, event):
+        # Adjust scrolling based on platform
+        if event.delta:  # Windows and macOS
+            self.canvas.yview_scroll(-1 * int(event.delta / 120), "units")
 
     def initialize_menu(self):
         menu = tk.Menu(self.root)
@@ -353,13 +333,15 @@ class MetaBoxApp:
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.root.quit)
 
-    def save(self):
-        file = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+    def save(self,head):
+        file = filedialog.asksaveasfile(mode='w', defaultextension=".pz")
         if not file:
             return
 
         data = []
-        self.head.traverse(data)
+        word = head.txt.get("1.0", tk.END).strip("\r\n")
+        data.append({"height": head.height, "width": head.width, "word": word})
+        traverse(head,data)
         json.dump(data, file, indent=4)
         file.close()
 
@@ -371,20 +353,52 @@ class MetaBoxApp:
         with open(file_path, 'r') as file:
             data = json.load(file)
 
-        self.head = MetaBox(self.frame, word=data[0]['word'])
-        current = self.head
+        # # self.head = MetaBox(self.frame, word=data[0]['word'],app=self)
+        # self.head.txt.text_box.delete("1.0", tk.END)  # Clear any existing text in the head
+        # self.head.txt.text_box.insert("1.0", data[0]["word"])  # Set the new word
+        # Delete the existing tree
+        self.delete_tree(self.head)
+        self.head = MetaBox(self.frame,data[0]["height"],data[0]["width"],data[0]["word"],app = self)
+        curr = self.head
 
-        for node in data[1:]:
-            if node['height'] > current.height:
-                current = MetaBox(self.frame, word=node['word'], parent=current)
-                current.parent.child = current
+        descendentCounter = 0
+        for index in range(1,len(data)):
+            if((curr.height+1 == data[index]["height"]) and (curr.width+1==data[index]["width"])):#if the next node is a child to curr
+                bob = MetaBox(self.frame,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr,head = self.head,app = self)
+                curr.child = bob
+                curr = curr.child
+                print("child found")
+            elif(curr.width+1 != data[index]["width"]):#it's a sibling to someone therefore width between curr and next node are the same
+                curr = ancestor(curr,data[index]["width"])
+                bob = MetaBox(self.frame,data[index]["height"],data[index]["width"],data[index]["word"],parent = curr,head = self.head,app = self)
+                bob.parent.sibling = bob
+                curr = curr.sibling
+                print("sibling found")
             else:
-                while current.height >= node['height']:
-                    current = current.parent
-                current = MetaBox(self.frame, word=node['word'], parent=current.parent)
-                current.parent.sibling = current
+                print("ERROR IN   " + str(data[index]["height"]) + " " + str(data[index]["width"]) +" " + str(data[index]["word"]) )
+        self.on_frame_configure()
+    def delete_tree(self, node):
+        """Recursively delete all nodes starting from the given node."""
+        if node is None:
+            return
 
-    def on_frame_configure(self, event):
+        # Delete children and siblings recursively
+        if node.child:
+            self.delete_tree(node.child)
+        if node.sibling:
+            self.delete_tree(node.sibling)
+
+        # Destroy the node's widget (e.g., text box)
+        if hasattr(node, "txt") and node.txt:
+            node.txt.destroy()
+
+        # Disconnect the node
+        node.child = None
+        node.sibling = None
+        node.parent = None
+        print(f"Deleted node at height {node.height}, width {node.width}")
+    def on_frame_configure(self, event=None):
+        """Update the scroll region to encompass all content."""
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     # def scroll_to_widget(self, widget = None,xMovement = 0,yMovement = 0):
@@ -415,8 +429,7 @@ class MetaBoxApp:
 
         widget_center_y = widget.winfo_y() + widget.winfo_height() / 2
         scroll_y = max(0, min((widget_center_y) / canvas_total_height, 1))
-        
-        print(scroll_y)
+
 
         # Scroll canvas to center the widget
         self.canvas.xview_moveto(scroll_x)
@@ -424,6 +437,10 @@ class MetaBoxApp:
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    # Use ThemedTk to apply the "equilux" theme
+    root = ThemedTk(theme="equilux")
+    root.title("MetaBox App")
+    root.configure(background='#383838')  # Ensure root background matches the theme
+
     app = MetaBoxApp(root)
     root.mainloop()

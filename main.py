@@ -25,14 +25,10 @@ class PomodoroApp:
         # self.reflection_textbox_visible = False
         # self.problem_solving_frame_visible = False  # Frame visibility state
         self.active_frame = None
-
-
         self.numOfDistraction = 0
         self.longDistraction = 0
 
         self.master = master
-
-
         pygame.init()
         pygame.mixer.init()  # Initialize the mixer module
         self.tick_sound = pygame.mixer.Sound("dripdrop.mp3")  # Load your MP3 file
@@ -44,6 +40,7 @@ class PomodoroApp:
         self.setup_contemplation_widgets()
         self.setup_reflection_widgets()
         self.show_contemplation()
+
     def setup_frames(self):
         style = ttk.Style()
         style.configure('TFrame', background='#383838')
@@ -74,14 +71,10 @@ class PomodoroApp:
         self.focus_problemsolving_frame = ttk.Frame(self.master, style='TFrame')
         self.focus_distraction_frame = ttk.Frame(self.master, style='TFrame')
 
-        # Pack distractionTextBox before focus_button_frame
         self.distractionTextBox = tk.Text(self.focus_distraction_frame, height=12, width=70)
         self.distractionTextBox.pack(pady=(5, 5))#, 
 
-        # Create and pack the MetaBox before the button frame
-        # head = MetaBox(self.focus_problemsolving_frame)
         self.meta_box_app = MetaBoxApp(self.focus_problemsolving_frame)
-        # head.setHead(head)
 
         self.focus_frame_list = [self.focus_problemsolving_frame,self.focus_distraction_frame]
 
@@ -94,6 +87,7 @@ class PomodoroApp:
         self.focus_frame.pack_forget()
         self.reflection_frame.pack_forget()
         self.contemplation_frame.pack_forget()
+
     def setup_focus_widgets(self):
         self.focus_frame.config(style='TFrame')
         self.focus_frame.pack(fill='both', expand=True, pady=(10, 0), anchor='n')
@@ -475,7 +469,7 @@ class PomodoroApp:
         except Exception as err:
             print(f"An error occurred with Google Sheets API: {err}. Falling back to Excel.")
             self.insert_into_database_excel()
-
+    #case for when there is an issue connecting with GOOGLE API. Insert into excel sheet instead
     def insert_into_database_excel(self):
         filename = 'database.xlsx'
         self.pomodoro.pause()
@@ -556,8 +550,6 @@ class PomodoroApp:
         self.breakStopwatch.remaining_time = 0
         self.breakStopwatch.in_bonus = False
         self.breakStopwatch.bonus_time = 0
-    
-        
     def toggle_focus_frames(self, event=None, frame_name=None):
         """
         Toggles between the distraction and problem-solving frames.
@@ -625,17 +617,11 @@ def send_notification(title, message):
         message=message,
         app_name="Pomodoro Timer"
     )
-# def newTab(notebook):
-#     # Create a new frame for the new tab
-#     new_frame = tk.Frame(notebook)
 
-#     # Create a new head for this tab
-#     new_head = MetaBox(new_frame, word="New Tree Root")
+def initializeBorderButtons(master,frame,_appInstance):
 
-#     # Add the new tab and associate the head
-#     notebook.add_tab(new_frame, new_head)
 
-def initializeBorderButtons(master,frame):
+    global app
     menu = tk.Menu(master)
     master.config(menu = menu) 
 
@@ -644,10 +630,8 @@ def initializeBorderButtons(master,frame):
 
     menu.add_cascade(label = "Edit", menu = subMenu) #Name of drop down menu
     menu.add_cascade(label = "Transparancy",  menu = transparentMenu)
-    # subMenu.add_command(label = "new Tab", command = lambda: newTab(master))
-    # subMenu.add_command(label="new Tab", command=lambda: newTab(notebook))
-    # subMenu.add_command(label = "save", command = save)
-    # subMenu.add_command(label = "Open", command = lambda: openTheFile(frame))
+    subMenu.add_command(label = "save", command = lambda: app.meta_box_app.save(app.meta_box_app.head))
+    subMenu.add_command(label="Open",command=app.meta_box_app.open_file)
     subMenu.add_separator()
     subMenu.add_command(label = "Exit", command =lambda: sys.exit(1))
 
@@ -660,22 +644,9 @@ def initializeBorderButtons(master,frame):
 def changeRootTransparency(master,percentage):
     root.attributes("-alpha",percentage)
 
-
-def initializeScollbar(master):
-    mainCanvas.grid(row = 1,column = 0,sticky = "ew")
-    mainCanvas.bind_all("<MouseWheel>", _on_mousewheel)
-    vsb.grid(column = 1,row = 1,sticky = "news")	
-    hsb.grid(column=0,row = 2,sticky = "ew")
-    vsb.rowconfigure(0, weight=1)
-    hsb.columnconfigure(0, weight=1)
-    mainCanvas.configure(yscrollcommand=vsb.set,xscrollcommand = hsb.set,height = master.winfo_screenheight()-120,width = master.winfo_screenwidth()-20,yscrollincrement = '2',xscrollincrement = '2')	
-    mainCanvas.create_window((12,12), window=frame, anchor="nw")
-    frame.bind("<Configure>", lambda event, canvas=mainCanvas: onFrameConfigure(mainCanvas))
-	# mainCanvas.configure(yscrollincrement='2')
 def onFrameConfigure(canvas):
     '''Reset the scroll region to encompass the inner frame'''
     canvas.configure(scrollregion=canvas.bbox("all"))
-
 
 if __name__ == "__main__":
    
@@ -692,11 +663,12 @@ if __name__ == "__main__":
     # hsb = tk.Scrollbar(root, orient="horizontal",command=mainCanvas.xview)
     mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
     root.attributes("-alpha",1.0)
-    # initializeScollbar(root)
 
-    initializeBorderButtons(root,frame)
-
+    global app
     app = PomodoroApp(root)
+    initializeBorderButtons(root,app.focus_problemsolving_frame,_appInstance = app)
+
+
 
 
     root.mainloop()
