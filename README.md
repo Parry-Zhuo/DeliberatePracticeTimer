@@ -1,4 +1,4 @@
-**What is deliberate practice?**
+##What is deliberate practice?
 
 Deliberate practice is a way of practicing that seeks to achieve consistent performance increases through
 focused, goal-oriented practice that targets specific weaknesses, incorporates immediate feedback, and pushing comfort zones.
