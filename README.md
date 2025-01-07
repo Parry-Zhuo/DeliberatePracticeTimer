@@ -10,11 +10,18 @@ Purpose: This app seeks to aid users in applying deliberate practice by creating
 for the future to allow users to easil define trends in their practice.
 
 **GOAL SETTING MODE**
-![image](https://github.com/user-attachments/assets/8d4011cc-ebfb-421e-9d7d-cc2f79d53cc7)
+
+![image](https://github.com/user-attachments/assets/b0fbdf77-6ed8-4026-8bba-0b4e1bfb4d43)
+
+
 **FOCUS MODE**
-![image](https://github.com/user-attachments/assets/54822835-1b9f-451e-9844-b435987a8b67)
+
+![image](https://github.com/user-attachments/assets/73797449-db4d-4c9e-9d9e-cd8a9ba82e5c)
+
 **REFLECTION MODE**
-![image](https://github.com/user-attachments/assets/2ab857f7-e74d-4cc1-a217-21725667e80e)
+
+![image](https://github.com/user-attachments/assets/175ad7cf-2beb-4612-9dc2-9def5fd5e8ba)
+
 
 
 Key Features:
