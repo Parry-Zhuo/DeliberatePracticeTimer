@@ -16,7 +16,7 @@ for the future to allow users to easil define trends in their practice.
 
 **FOCUS MODE**
 
-![image](https://github.com/user-attachments/assets/44e11ef8-1d40-4065-bd66-663b97f14870)
+![image](https://github.com/user-attachments/assets/0c88b2ce-e8f5-4252-a1fb-28234212feae)
 
 
 **REFLECTION MODE**
