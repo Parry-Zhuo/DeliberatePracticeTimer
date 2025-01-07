@@ -9,7 +9,13 @@ focused, goal-oriented practice that targets specific weaknesses, incorporates i
 Purpose: This app seeks to aid users in applying deliberate practice by creating a platform to easily label specific tasks they are performing, providing immediate feedback, while saving the data
 for the future to allow users to easil define trends in their practice.
 
-![image](https://github.com/user-attachments/assets/220ecf08-aea3-4937-8232-1d27b97b084d)
+**GOAL SETTING MODE**
+![image](https://github.com/user-attachments/assets/8d4011cc-ebfb-421e-9d7d-cc2f79d53cc7)
+**FOCUS MODE**
+![image](https://github.com/user-attachments/assets/54822835-1b9f-451e-9844-b435987a8b67)
+**REFLECTION MODE**
+![image](https://github.com/user-attachments/assets/2ab857f7-e74d-4cc1-a217-21725667e80e)
+
 
 Key Features:
 
