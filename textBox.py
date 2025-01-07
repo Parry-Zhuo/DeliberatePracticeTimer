@@ -5,8 +5,18 @@ import tkinter as tk
 from tkinter import ttk
 
 class AutoResizedText(tk.Frame):
-	def __init__(self,master, width=6, height=1, family = None, size=None,*args, **kwargs):
-		tk.Frame.__init__(self,master,width=2,height=1)
+	"""
+	@class AutoResizedText
+	@brief A custom Tkinter widget that dynamically resizes based on its text content.
+
+	This class encapsulates a Tkinter `Text` widget inside a `Frame` and provides functionality
+	to automatically adjust the widget's height and width based on the content. It is useful
+	for scenarios where the input field size should adapt dynamically to the user's input.
+
+	Credit goes to https://stackoverflow.com/questions/11544187/tkinter-resize-text-to-contents
+	"""
+	def __init__(self,master, width=8, height=1, family = None, size=None,*args, **kwargs):
+		tk.Frame.__init__(self,master,width=8,height=1)
 		
 		self.height = height
 		self.width = width
@@ -14,7 +24,7 @@ class AutoResizedText(tk.Frame):
 			self,
 			height = self.height,
 			width = self.width,
-			font=('Helvetica', 10),  # Match font style
+			font=('Helvetica', 11),  # Match font style
 			fg="#E0E0E0",  # Light gray text color
 			bg="#505050",  # Dark gray background
 			insertbackground="#E0E0E0",  # Cursor color
@@ -41,12 +51,13 @@ class AutoResizedText(tk.Frame):
 		#the only way to deal with this is reorganize text, THEN we insert into text.
 		self.text = event.widget.get("1.0",tk.END).split("\n")
 		self.height = len(self.text)
-		self.width = 0
+		self.width = 8
 		for width in self.text:
 			if len(width) > self.width:
 				self.width = len(width)
-		self.text_box.config(height = self.height,width = self.width+2)
-		
+		self.text_box.config(height = self.height,width = self.width)
+
+
 	def changeLocation(self,row,column):
 		self.row = row
 		self.column = column
@@ -98,10 +109,15 @@ class AutoResizedText(tk.Frame):
 	def get(self, start, end=None):
 		return self.text_box.get(start, end)
 
+	# def update(self, text):
+	# 	self.text_box.delete('1.0', 'end')
+	# 	self._fit_to_size_of_text(text)
+	# 	self.text_box.insert('1.0', text)
+
 	def update(self, text):
-		self.text_box.delete('1.0', 'end')
-		self._fit_to_size_of_text(text)
-		self.text_box.insert('1.0', text)
+		self.text_box.delete('1.0', 'end')  # Clear current content
+		self.text_box.insert('1.0', text)  # Insert new content
+		self.updateBox()  # Adjust the size based on the new content
 
 #
 # root = tk.Tk()
