@@ -23,6 +23,10 @@ for the future to allow users to easil define trends in their practice.
 ![image](https://github.com/user-attachments/assets/175ad7cf-2beb-4612-9dc2-9def5fd5e8ba)
 
 
+All data is then automatically uploaded to a Google Sheet using the Google Sheets API for me to find patterns in behaviour to improve upon practice
+
+![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
+
 
 Key Features:
 
@@ -38,9 +42,7 @@ Key Features:
 
 
 
-All data is automatically uploaded to a Google Sheet using the Google Sheets API, ensuring seamless cloud connectivity.
 
-![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
 
 
 This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my practices. 
