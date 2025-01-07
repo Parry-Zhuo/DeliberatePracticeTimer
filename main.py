@@ -57,13 +57,12 @@ class PomodoroApp:
             - Options to save the reflection data into Google Sheets or Excel or discard changes.
 
     Additional Features:
+    - **MetaBox Integration**: Provides a GUI tailored to allow users to break problems down to smaller digestable ones
     - **Sound Toggle**: Enables or disables ticking sounds for focus sessions.
-    - **Distraction Management**: Counts and tracks short and long distractions during focus mode.
+    - **Distraction Management**: Counts distractions during focus mode.
     - **Data Integration**:
         - Authenticates with Google Sheets for data logging.
         - Falls back to Excel-based logging in case of API issues.
-    - **Dynamic Layout**: Switches seamlessly between modes with auto-resizing and theme adjustments.
-    - **MetaBox Integration**: Provides a visual structure for problem-solving during focus mode.
 
     @class PomodoroApp
     """
@@ -77,7 +76,9 @@ class PomodoroApp:
         self.master = master
         pygame.init()
         pygame.mixer.init()  # Initialize the mixer module
-        self.tick_sound = pygame.mixer.Sound("dripdrop.mp3")  # Load your MP3 file
+        # self.tick_sound = pygame.mixer.Sound("dripdrop.mp3")  # Load your MP3 file
+        self.tick_sound = self.load_sound_file()  # Dynamically load the MP3
+
         self.tick_channel = pygame.mixer.find_channel()
         self.sound_enabled = True  # Default to sound being on
 
@@ -117,9 +118,13 @@ class PomodoroApp:
         self.focus_problemsolving_frame = ttk.Frame(self.master, style='TFrame')
         self.focus_distraction_frame = ttk.Frame(self.master, style='TFrame')
 
+
+        self.focus_goalSetting_frame = ttk.Frame(self.master, style='TFrame')
+
         self.distractionTextBox = tk.Text(self.focus_distraction_frame, height=12, width=70)
         self.distractionTextBox.pack(pady=(5, 5))#, 
 
+        self.meta_box_GoalSetting_app = MetaBoxApp(self.focus_goalSetting_frame)
         self.meta_box_app = MetaBoxApp(self.focus_problemsolving_frame)
 
         self.focus_frame_list = [self.focus_problemsolving_frame,self.focus_distraction_frame]
@@ -133,6 +138,7 @@ class PomodoroApp:
         self.focus_frame.pack_forget()
         self.reflection_frame.pack_forget()
         self.contemplation_frame.pack_forget()
+        self.focus_goalSetting_frame.pack_forget()
 
     def setup_focus_widgets(self):
         self.focus_frame.config(style='TFrame')
@@ -301,6 +307,22 @@ class PomodoroApp:
         discard_button.pack(side='left')
 
         self.breakStopwatch = Stopwatch(self.break_time_label)
+        
+    def toggle_goalSetting_frame(self):
+        """
+        Toggles visibility of the goal-setting frame (focus_goalSetting_frame) as a fullscreen overlay.
+        """
+        if self.active_frame == self.focus_goalSetting_frame:
+            # If the goal-setting frame is active, hide it
+            self.focus_goalSetting_frame.place_forget()
+            self.active_frame = None
+        else:
+            # Show the goal-setting frame as a fullscreen overlay
+            self.focus_goalSetting_frame.place(relx=0, rely=0, relwidth=1, relheight=1)
+            self.focus_goalSetting_frame.tkraise()  # Bring this frame to the top
+            self.active_frame = self.focus_goalSetting_frame
+
+
     def show_focus(self):
         error_present = False
 
@@ -391,6 +413,7 @@ class PomodoroApp:
         self.reflection_frame.pack(fill='both', expand=True)
         self.master.update_idletasks()  # Refresh geometry calculations
         self.master.geometry("")  # Let Tkinter automatically resize the window
+
     def show_contemplation(self, action=None):
         error_present = False
         if action == "insert":
@@ -493,7 +516,6 @@ class PomodoroApp:
             'Bonus Time Rested': self.breakStopwatch.getStopWatchData()['Bonus Time'],
             'Number of Distractions': self.numOfDistraction,
             'Reflection': self.reflection_textbox.get("1.0", "end-1c"),
-            'Satisfaction Level': self.satisfaction_entry.get(),
         }
 
         # Convert data to a list of lists (for Google Sheets API)
@@ -642,7 +664,34 @@ class PomodoroApp:
         self.master.update_idletasks()  # Refresh geometry calculations
         self.master.geometry("")  # Let Tkinter automatically resize the window
 
+    def load_sound_file(self):
+        """
+        Dynamically loads the MP3 file specified in the first row of configSound.txt.
+        Falls back to default or raises an error if files are missing.
+        """
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        config_file = os.path.join(base_dir, "configSound.txt")
+        default_mp3 = os.path.join(base_dir, "dripdrop.mp3")
 
+        # Check for configSound.txt
+        if os.path.exists(config_file):
+            with open(config_file, "r") as f:
+                mp3_file = f.readline().strip()
+                mp3_path = os.path.join(base_dir, mp3_file)
+                if os.path.exists(mp3_path):
+                    return pygame.mixer.Sound(mp3_path)
+                else:
+                    print(f"MP3 file {mp3_file} not found in {base_dir}.")
+        else:
+            print(f"{config_file} not found in {base_dir}.")
+
+        # Fall back to default
+        if os.path.exists(default_mp3):
+            return pygame.mixer.Sound(default_mp3)
+        else:
+            raise FileNotFoundError(f"Default MP3 file missing: {default_mp3}")
+
+        
     def toggle_sound(self, state=" "):
         
         if state == " ":
@@ -659,6 +708,32 @@ class PomodoroApp:
                 self.tick_channel.play(self.tick_sound, loops=-1)
         else:
             self.tick_channel.stop()
+
+    def save_active_meta_box(self):
+        """
+        Saves and opens the meta box app for the currently active frame.
+        If the Goal Setting frame is active, it saves the Goal Setting meta box.
+        Otherwise, it saves the Problem Solving meta box.
+        """
+        if self.active_frame == self.focus_goalSetting_frame:
+            # Save and open for Goal Setting
+            self.meta_box_GoalSetting_app.save(self.meta_box_GoalSetting_app.head)
+        else:
+            # Save and open for Problem Solving
+            self.meta_box_app.save(self.meta_box_app.head)
+    def open_active_meta_box(self):
+        """
+        Opens the meta box app for the currently active frame.
+        If the Goal Setting frame is active, it opens the Goal Setting meta box.
+        Otherwise, it opens the Problem Solving meta box.
+        """
+        if self.active_frame == self.focus_goalSetting_frame:
+            # Open for Goal Setting
+            self.meta_box_GoalSetting_app.open_file()
+        else:
+            # Open for Problem Solving
+            self.meta_box_app.open_file()
+
 
 def format_time(seconds):
     hours = int(seconds // 3600)
@@ -684,10 +759,10 @@ def initializeBorderButtons(master,frame,_appInstance):
 
     menu.add_cascade(label = "Edit", menu = subMenu) #Name of drop down menu
     menu.add_cascade(label = "Transparancy",  menu = transparentMenu)
-    subMenu.add_command(label = "save", command = lambda: app.meta_box_app.save(app.meta_box_app.head))
-    subMenu.add_command(label="Open",command=app.meta_box_app.open_file)
+    subMenu.add_command(label = "save", command=lambda: app.save_active_meta_box())
+    subMenu.add_command(label="Open",command=lambda: app.open_active_meta_box())
+    subMenu.add_command(label="Goal setting" , command=app.toggle_goalSetting_frame)
     subMenu.add_separator()
-    subMenu.add_command(label = "Exit", command =lambda: sys.exit(1))
 
     transparentMenu.add_command(label = "30%",command = lambda: changeRootTransparency(master,0.3))
     transparentMenu.add_command(label = "50%",command =lambda: changeRootTransparency(master,0.5) )
@@ -713,8 +788,6 @@ if __name__ == "__main__":
     mainCanvas = tk.Canvas(root, background = 'black')
     frame = tk.Frame(mainCanvas, background="black")
     framelst = []
-    
-
     mainCanvas.configure(scrollregion=mainCanvas.bbox("all"))
     root.attributes("-alpha",1.0)
 

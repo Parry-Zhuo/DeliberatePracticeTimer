@@ -201,14 +201,7 @@ def sortButtons(curr,height,width):
 	curr.height = height
 	curr.width = width
 	curr.txt.grid_configure(row = height, column = width,sticky = "w")
-def conversion(converting):#this method converts string to int, or int to string
-    try:
-	#if it is a string with a number it will run this, changing it to an int
-        converted = converting + ""
-        converted = int(converting)
-    except :# if it is a int, it'll convert to a string
-        converted = str(converting)
-    return converted
+
 
 def findMaxLine(myList):
     try:
@@ -222,9 +215,6 @@ def onFrameConfigure(canvas):
     '''Reset the scroll region to encompass the inner frame'''
     canvas.configure(scrollregion=canvas.bbox("all"))
 
-	# mainCanvas.configure(yscrollincrement='2')
-def moveFocus(curr):
-    curr.txt.focus_set()
 
 def countChildren(curr):#counts number of descendents 
 	count = 0

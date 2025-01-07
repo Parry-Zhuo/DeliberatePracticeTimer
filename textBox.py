@@ -28,14 +28,25 @@ class AutoResizedText(tk.Frame):
 		# self.text_box.config(font=self._font)
 		self.text_box.bind("<Key>", self.updateBox)
 
-	def updateBox(self,event=None):#so the reason why this method is kinda bad is because we insert the character. THEN we reorganize the text.
-		#the only way to deal with this is reorganize text, THEN we insert into text.
-		self.text = event.widget.get("1.0",tk.END).split("\n")
+	# def updateBox(self,event=None):#so the reason why this method is kinda bad is because we insert the character. THEN we reorganize the text.
+	# 	#the only way to deal with this is reorganize text, THEN we insert into text.
+	# 	self.text = event.widget.get("1.0",tk.END).split("\n")
+	# 	self.height = len(self.text)
+	# 	self.width = 0
+	# 	for width in self.text:
+	# 		if len(width) > self.width:
+	# 			self.width = len(width)
+
+	def updateBox(self, event=None):
+		# Get the content of the Text widget, excluding the trailing newline
+		self.text = event.widget.get("1.0", tk.END).rstrip("\n").split("\n")
+		
+		# Calculate new height and width
 		self.height = len(self.text)
-		self.width = 0
-		for width in self.text:
-			if len(width) > self.width:
-				self.width = len(width)
+		self.width = max((len(line) for line in self.text), default=1)  # Avoid zero width
+
+		# Update the Text widget's size
+		self.text_box.config(height=self.height, width=self.width + 2)
 		self.text_box.config(height = self.height,width = self.width+2)
 	def changeLocation(self,row,column):
 		self.row = row
