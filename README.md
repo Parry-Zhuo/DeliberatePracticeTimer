@@ -27,7 +27,7 @@ This is where the actual practice happens. Inspired by the Pomodoro Technique, u
 
 **Additional features to aid in focusing**
 
-  - **Problem Solving:** To make achieving goals easier users can break down complex problems into smaller, actionable chunks, helping to tackle challenges systematically.
+  - **Problem Solving:** To make achieving goals easier, users can break down complex problems into smaller, actionable chunks, helping to tackle challenges systematically.
   
   - **Distraction Logging:** Allows users to note distractions, either to observe patterns or log them for later entertainment, ensuring they stay focused during practice.
   
@@ -35,7 +35,7 @@ This is where the actual practice happens. Inspired by the Pomodoro Technique, u
 ![image](https://github.com/user-attachments/assets/68b9e6a3-1c75-4cb3-a309-27ada0de7a8b)
 
 **REFLECTION MODE**
-Post-practice, users reflect on their performance to make observations on how the practice went. This will allow users to correct for mistakes, as well as 
+Post-practice, users can finally rest as well as reflect on their performance to make observations on how the practice went. This will allow users to correct for mistakes, as well as 
 identify patterns in the future using the datalogging feature
 
 ![image](https://github.com/user-attachments/assets/175ad7cf-2beb-4612-9dc2-9def5fd5e8ba)
