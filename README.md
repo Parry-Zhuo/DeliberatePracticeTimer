@@ -23,11 +23,11 @@ In this mode, users set SMART(specific, measurable, attainable, relevant, timebo
 
 
 **FOCUS MODE**
-This is where the actual practice happens. Inspired by the Pomodoro Technique, users focus on their practice
+This is where the actual practice happens. Inspired by the Pomodoro Technique, users focus on achieving their set goals
 
-**Additional features**
+**Additional features to aid in focusing**
 
-  - **Problem Solving:** Enables users to break down complex problems into smaller, actionable chunks, helping to tackle challenges systematically.
+  - **Problem Solving:** To make achieving goals easier users can break down complex problems into smaller, actionable chunks, helping to tackle challenges systematically.
   
   - **Distraction Logging:** Allows users to note distractions, either to observe patterns or log them for later entertainment, ensuring they stay focused during practice.
   
