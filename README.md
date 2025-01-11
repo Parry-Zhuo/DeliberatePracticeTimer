@@ -6,8 +6,9 @@ focused, goal-oriented practice that targets specific weaknesses, incorporates i
 <img src="https://github.com/user-attachments/assets/d0338e53-48b1-493d-a38b-8ca59df22748" alt="Description of image" width="500"/>
 
 **Deliberate Practice Tracker App**
-Purpose: This app seeks to aid users in applying deliberate practice by creating a platform to easily label specific tasks they are performing, providing immediate feedback, while saving the data
-for the future to allow users to easil define trends in their practice.
+
+This app seeks to aid users in applying deliberate practice by creating a platform to easily label specific tasks they are performing, providing immediate feedback, while automatically saving the data to allow
+users to identify areas of improvement.
 
 ## How does the app WORK?
 There are three modes, 
