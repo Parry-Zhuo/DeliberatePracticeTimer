@@ -13,34 +13,30 @@ for the future to allow users to easil define trends in their practice.
 There are three modes, one for setting goals. One for logging in pomodoro sessions, one for reflecting upon the practice period.
 
 **GOAL SETTING MODE**
-In this mode, users define their objectives for the practice session. The app allows users to:
-- Specify tasks and areas to focus on.
-- Break down goals into smaller, actionable steps.
-- Prioritize tasks for optimal results.
+
+In this mode, users specify tasks and areas to focus on through breaking down goals into smaller, actionable steps.
+
 ![image](https://github.com/user-attachments/assets/b0fbdf77-6ed8-4026-8bba-0b4e1bfb4d43)
 
 
 **FOCUS MODE**
-This is where the actual practice happens. Inspired by the Pomodoro Technique, the timer is used to:
-- Track focused work periods.
-- Provide visual and audio cues for session start, end, and breaks.
-- Log task details and progress for future analysis.
-  
+This is where the actual practice happens. Inspired by the Pomodoro Technique, users focus on their practice
+
+**Additional features **
+  **Problem Solving:** Enables users to break down complex problems into smaller, actionable chunks, helping to tackle challenges systematically.
+  **Distraction Logging:** Allows users to note distractions, either to observe patterns or log them for later entertainment, ensuring they stay focused during practice.
+
 ![image](https://github.com/user-attachments/assets/68b9e6a3-1c75-4cb3-a309-27ada0de7a8b)
 
 **REFLECTION MODE**
-Post-practice, users reflect on their performance to evaluate strengths and weaknesses. This mode includes:
-- Writing detailed notes about what went well and what didn’t.
-- Recording feedback received during the session.
-- Logging insights and areas for improvement.
+Post-practice, users reflect on their performance to make observations on how the practice went. This will allow users to correct for mistakes, as well as 
+identify patterns in the future using the datalogging feature
 
 ![image](https://github.com/user-attachments/assets/175ad7cf-2beb-4612-9dc2-9def5fd5e8ba)
 
 ### Data Logging and Analysis
-All session data, including goals, task details, and reflections, is automatically uploaded to a Google Sheet using the Google Sheets API. This allows users to:
-- Track their progress over time.
-- Identify trends in their practice behavior.
-- Adjust their practice strategies for better results.
+All session data, including goals, task details, and reflections, is automatically uploaded to a Google Sheet using the Google Sheets API. Allowing users to track performance 
+over time and identiy trends and adjust their practice for better results
 
 ![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
 
@@ -50,7 +46,7 @@ This project began as part of a 4-week "Introduction to Python" course and was l
 CHATGPT was extensively used in the making of this project to decrease development time
 
 
-## How does the code work?
+## How does the code work?( STILL WRITING THIS SECTION)
 
 For further details on how I implemented the cascading textBoxes utilizing a tree that was implemented using a double-linkedList and traversing it with DFS/BFS visit
 https://github.com/Parry-Zhuo/ProblemSolvingApp
