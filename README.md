@@ -11,7 +11,7 @@ for the future to allow users to easil define trends in their practice.
 
 ## How does the app WORK?
 There are three modes, 
-1. setting goals
+1. Setting goals
 2. Focusing, and achieving set goals
 3. Reflecting and improving upon practice 
 
