@@ -42,7 +42,7 @@ identify patterns in the future using the datalogging feature
 
 ### Data Logging and Analysis
 All session data, including goals, task details, and reflections, is automatically uploaded to a Google Sheet using the Google Sheets API. Allowing users to track performance 
-over time and identiy trends and adjust their practice for better results
+over time and identify trends and adjust their practice for better results
 
 ![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
 
