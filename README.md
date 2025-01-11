@@ -10,7 +10,10 @@ Purpose: This app seeks to aid users in applying deliberate practice by creating
 for the future to allow users to easil define trends in their practice.
 
 ## How does the app WORK?
-There are three modes, one for setting goals. One for logging in pomodoro sessions, one for reflecting upon the practice period.
+There are three modes, 
+1. setting goals
+2. Focusing, and achieving set goals
+3. Reflecting and improving upon practice 
 
 **GOAL SETTING MODE**
 
