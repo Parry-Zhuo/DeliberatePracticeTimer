@@ -14,7 +14,7 @@ There are three modes, one for setting goals. One for logging in pomodoro sessio
 
 **GOAL SETTING MODE**
 
-In this mode, users specify tasks and areas to focus on through breaking down goals into smaller, actionable steps.
+In this mode, users set SMART(specific, measurable, attainable, relevant, timebound) goals to focus on through breaking down goals into smaller, actionable steps and identifying time to be spent focusing.
 
 ![image](https://github.com/user-attachments/assets/b0fbdf77-6ed8-4026-8bba-0b4e1bfb4d43)
 
