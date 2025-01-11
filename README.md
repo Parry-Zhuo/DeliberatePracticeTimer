@@ -22,9 +22,12 @@ In this mode, users specify tasks and areas to focus on through breaking down go
 **FOCUS MODE**
 This is where the actual practice happens. Inspired by the Pomodoro Technique, users focus on their practice
 
-**Additional features **
+**Additional features**
+
   **Problem Solving:** Enables users to break down complex problems into smaller, actionable chunks, helping to tackle challenges systematically.
+  
   **Distraction Logging:** Allows users to note distractions, either to observe patterns or log them for later entertainment, ensuring they stay focused during practice.
+  
 
 ![image](https://github.com/user-attachments/assets/68b9e6a3-1c75-4cb3-a309-27ada0de7a8b)
 
