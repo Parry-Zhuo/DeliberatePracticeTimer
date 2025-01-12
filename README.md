@@ -52,9 +52,6 @@ over time and identify trends and adjust their practice for better results
 This project began as part of a 4-week "Introduction to Python" course and was later expanded due to the benefits it brang to my practices. 
 CHATGPT was extensively used in the making of this project to decrease development time
 
-
-## How does the code work?( STILL WRITING THIS SECTION)
-
 For further details on how I implemented the cascading textBoxes utilizing a tree that was implemented using a double-linkedList and traversing it with DFS/BFS visit
 https://github.com/Parry-Zhuo/ProblemSolvingApp
 
