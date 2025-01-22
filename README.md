@@ -18,13 +18,13 @@ There are three modes,
 
 **GOAL SETTING MODE**
 
-In this mode, users set SMART(specific, measurable, attainable, relevant, timebound) goals to focus on through breaking down goals into smaller, actionable steps and identifying time to be spent focusing.
+In this mode, users set SMART(specific, measurable, attainable, relevant, timebound) goals to focus on through breaking down goals into smaller, actionable steps.
 
 ![image](https://github.com/user-attachments/assets/b0fbdf77-6ed8-4026-8bba-0b4e1bfb4d43)
 
 
 **FOCUS MODE**
-This is where the actual practice happens. Inspired by the Pomodoro Technique, users focus on achieving their set goals
+Users focus on achieving their SMART goal within a time limit.
 
 **Additional features to aid in focusing**
 
@@ -36,8 +36,7 @@ This is where the actual practice happens. Inspired by the Pomodoro Technique, u
 ![image](https://github.com/user-attachments/assets/68b9e6a3-1c75-4cb3-a309-27ada0de7a8b)
 
 **REFLECTION MODE**
-Post-practice, users can finally rest as well as reflect on their performance to make observations on how the practice went. This will allow users to correct for mistakes, as well as 
-identify patterns in the future using the datalogging feature
+Users can finally rest, as well as reflect on their performance to make observations on how the practice went.
 
 ![image](https://github.com/user-attachments/assets/175ad7cf-2beb-4612-9dc2-9def5fd5e8ba)
 
