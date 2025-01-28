@@ -26,7 +26,7 @@ In this mode, users set SMART(specific, measurable, attainable, relevant, timebo
 **FOCUS MODE**
 Users focus on achieving their SMART goal within a time limit.
 
-**Additional features to aid in focusing**
+**Additional features**
 
   - **Problem Solving:** To make achieving goals easier, users can break down complex problems into smaller, actionable chunks, helping to tackle challenges systematically.
   
