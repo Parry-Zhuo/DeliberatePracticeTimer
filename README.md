@@ -5,7 +5,7 @@ deliberate practice demands focused effort, intentional strategy, and continuous
 
 The Deliberate Practice Tracker App helps users apply this method by setting SMART goals, maintaining focus, and tracking progress
 
-<img src="https://github.com/user-attachments/assets/d0338e53-48b1-493d-a38b-8ca59df22748" alt="Description of image" width="500"/>
+<img src="https://github.com/user-attachments/assets/d0338e53-48b1-493d-a38b-8ca59df22748" alt="Description of image" width="250"/>
 
 ## How does the app WORK?
 There are three modes, 
