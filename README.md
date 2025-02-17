@@ -38,8 +38,8 @@ Users can finally rest, as well as reflect on their performance to make observat
 ![image](https://github.com/user-attachments/assets/175ad7cf-2beb-4612-9dc2-9def5fd5e8ba)
 
 ### Data Logging and Analysis
-All session data is automatically uploaded to a Google Sheet using the Google Sheets API. Allowing users to track performance 
-over time and identify trends and adjust their practice for better results
+All session data is automatically uploaded to a Google Sheet using the Google Sheets API where data is saved on the cloud allowing users to log in data from different computers.
+Users can then track performance and identify trends to improve their practice for better results.
 
 ![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
 
