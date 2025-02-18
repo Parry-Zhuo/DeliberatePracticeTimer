@@ -3,7 +3,7 @@
 Deliberate practice is a structured and goal-driven approach to improvement. Unlike routine practice, which may involve passive repetition, 
 deliberate practice demands focused effort, intentional strategy, and continuous refinement to enhance performance.
 
-The Deliberate Practice Tracker App was designed to help me apply this method by setting SMART goals, maintaining focus, and tracking progress
+The Deliberate Practice Tracker App was designed to help me apply this method by setting "SMART"(specific, measurable, attainable, relevant, timebound) goals, maintaining focus, and tracking progress
 
 <img src="https://github.com/user-attachments/assets/d0338e53-48b1-493d-a38b-8ca59df22748" alt="Description of image" width="250"/>
 
@@ -15,13 +15,13 @@ There are three modes,
 
 **GOAL SETTING MODE**
 
-In this mode, users set SMART(specific, measurable, attainable, relevant, timebound) goals to focus on through breaking down goals into smaller, actionable steps.
+In this mode, users set "SMART" goals to focus on through breaking down goals into smaller, actionable steps.
 
 ![image](https://github.com/user-attachments/assets/b0fbdf77-6ed8-4026-8bba-0b4e1bfb4d43)
 
 
 **FOCUS MODE**
-Users focus on achieving their SMART goal within a time limit.
+Users focus on achieving their "SMART" goal within a time limit.
 
 **Additional features**
 
