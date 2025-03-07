@@ -247,6 +247,7 @@ class PomodoroApp:
             text="TASK",
             style='TLabel'
         )
+        
         self.reflection_task_label.pack(pady=(10, 0), anchor='n')
 
         self.reflection_goal_label = ttk.Label(

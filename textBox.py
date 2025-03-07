@@ -55,7 +55,7 @@ class AutoResizedText(tk.Frame):
 		for width in self.text:
 			if len(width) > self.width:
 				self.width = len(width)
-		self.text_box.config(height = self.height,width = self.width)
+		self.text_box.config(height = self.height,width = self.width+5)
 
 
 	def changeLocation(self,row,column):
@@ -77,7 +77,7 @@ class AutoResizedText(tk.Frame):
 		for line in self.text_box.get("1.0", tk.END).split("\n"):
 			if len(line) > widget_width:
 				widget_width = len(line)+1
-			self.text_box.config(width=widget_width, height=widget_height)
+			self.text_box.config(width=widget_width + 4, height=widget_height)
 
 	def _fit_to_size_of_text(self, text):
 		self.focus()
