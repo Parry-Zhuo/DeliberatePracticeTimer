@@ -525,6 +525,7 @@ class PomodoroApp:
             'Time Rested': float(self.breakStopwatch.getStopWatchData()['Elapsed Time']) + float(self.breakStopwatch.getStopWatchData()['Bonus Time']),  # Convert to int
             'Reflection': self.reflection_textbox.get("1.0", "end-1c").strip(),  # Ensure reflection text is valid
             'Number of Distractions': int(self.numOfDistraction),  # Ensure integer value
+            'Satisfaction Level': int(self.satisfaction_entry.get().strip()) if self.validate_satisfaction() else "Invalid",  # Validate and store satisfaction level
         }
 
 
