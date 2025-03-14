@@ -1,0 +1,32 @@
+[
+    {
+        "height": 0,
+        "width": 0,
+        "word": "CHATGPT TO DO LIST"
+    },
+    {
+        "height": 1,
+        "width": 1,
+        "word": "WEEKLY EMAILS \n\nOPTIMIZING PROMPTING TECHNIQUE\nin the future"
+    },
+    {
+        "height": 2,
+        "width": 2,
+        "word": "Taking in data"
+    },
+    {
+        "height": 3,
+        "width": 2,
+        "word": "Automatically running\nscript VIA google sheets."
+    },
+    {
+        "height": 4,
+        "width": 2,
+        "word": "Feeding this script into GPT"
+    },
+    {
+        "height": 5,
+        "width": 2,
+        "word": "Read deliberate practice excel sheet"
+    }
+]

@@ -9,14 +9,16 @@ class Stopwatch:
         self.start_time = 0
         self.remaining_time = 0
         self.initial_focus_time_minutes = 0
-        self.bonus_time = 0
+        self.bonus_time = 0# should remove
         self.running = False
         self.in_bonus = False
         self.startLocalTime = None
         self.timerFinishedFlag = False
         self.display_label = display_label
         self.total_elapsed_time = 0
-
+    '''
+    @brief sets starting time
+    '''
     def set_time(self, minutes):
         self.remaining_time = minutes * 60
         self.initial_focus_time_minutes = minutes
@@ -27,6 +29,7 @@ class Stopwatch:
         if not self.running:
             self.start_time = time.time()
             self.startLocalTime = time.localtime()
+            self.bonus_time = 0
             if self.remaining_time == 0 and not self.in_bonus:
                 return
             self.end_time = self.start_time + self.remaining_time
