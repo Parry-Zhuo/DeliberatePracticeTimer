@@ -43,7 +43,7 @@ Users can finally rest, as well as reflect on their performance to make observat
 All session data is automatically uploaded to a Google Sheet using the Google Sheets API where data is saved on the cloud allowing users to log in data from different computers.
 Users can then track performance and identify trends to improve their practice for better results. In addition to this, all the data will be filtered weekly and an email report of what I did will be sent to me by CHATGPT.
 
-![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
+![image](https://github.com/user-attachments/assets/f6f8a3d9-7be7-4c73-9c1d-e1bdd36dd03e)
 
 
 
