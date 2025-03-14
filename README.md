@@ -21,6 +21,7 @@ In this mode, users set "SMART" goals to focus on through breaking down goals in
 
 
 **FOCUS MODE**
+
 Users focus on achieving their "SMART" goal within a time limit.
 
 **Additional features**
@@ -33,13 +34,14 @@ Users focus on achieving their "SMART" goal within a time limit.
 ![image](https://github.com/user-attachments/assets/68b9e6a3-1c75-4cb3-a309-27ada0de7a8b)
 
 **REFLECTION MODE**
+
 Users can finally rest, as well as reflect on their performance to make observations on how the practice went.
 
 ![image](https://github.com/user-attachments/assets/175ad7cf-2beb-4612-9dc2-9def5fd5e8ba)
 
 ### Data Logging and Analysis
 All session data is automatically uploaded to a Google Sheet using the Google Sheets API where data is saved on the cloud allowing users to log in data from different computers.
-Users can then track performance and identify trends to improve their practice for better results.
+Users can then track performance and identify trends to improve their practice for better results. In addition to this, all the data will be filtered weekly and an email report of what I did will be sent to me by CHATGPT.
 
 ![image](https://github.com/user-attachments/assets/4fd05cb5-8357-47de-8a18-e4678ad196ae)
 
