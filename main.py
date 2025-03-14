@@ -53,7 +53,7 @@ class PomodoroApp:
             - Displays task, goal, and distraction counts during the session.
             - A break timer to track resting periods.
             - A text area for users to write reflections about their session.
-            - A satisfaction level input (1-10) for session rating.
+            - A satisfaction level input (1-3) for session rating.
             - Options to save the reflection data into Google Sheets or Excel or discard changes.
 
     Additional Features:
@@ -280,7 +280,7 @@ class PomodoroApp:
 
         satisfaction_label = ttk.Label(
             self.reflection_frame,
-            text="SATISFACTION LEVEL (1-10):",
+            text="SATISFACTION LEVEL (1-3):",
             style='TLabel'
         )
         satisfaction_label.pack(pady=(5, 2))
@@ -438,8 +438,8 @@ class PomodoroApp:
     def validate_satisfaction(self, event=None):
         try:
             val = int(self.satisfaction_entry.get())
-            if not 1 <= val <= 10:
-                raise ValueError("Satisfaction rating must be between 1 and 10.")
+            if not 1 <= val <= 3:
+                raise ValueError("Satisfaction rating must be between 1 and 3.")
             else:
                 return True
         except ValueError:
@@ -500,7 +500,7 @@ class PomodoroApp:
             return None
     def insert_into_database(self):
         SPREADSHEET_ID = '1ETycSikjSfLCkZQLMqMa2GOTWE3Z4peGKZnI7o60VzQ'
-        RANGE_NAME = 'Sheet1!A1'  # Update this range based on your sheet structure
+        RANGE_NAME = 'deliberatePracticeData!A1'  # Update this range based on your sheet structure
 
         # Pause timers
         self.pomodoro.pause()
@@ -509,15 +509,14 @@ class PomodoroApp:
         # Prepare data
         data = {
             'Start Time': time.strftime("%Y-%m-%d %H:%M:%S", self.pomodoro.startLocalTime) if self.pomodoro.startLocalTime else "Not started",
-            'Task': self.task_entry.get(),
-            'Goal': self.goal_entry.get(),
-            'Time Spent on Task': self.pomodoro.getStopWatchData()['Elapsed Time'],
-            'Bonus Time Spent on Task': self.pomodoro.getStopWatchData()['Bonus Time'],
-            'Time Rested': self.breakStopwatch.getStopWatchData()['Elapsed Time'],
-            'Bonus Time Rested': self.breakStopwatch.getStopWatchData()['Bonus Time'],
-            'Number of Distractions': self.numOfDistraction,
-            'Reflection': self.reflection_textbox.get("1.0", "end-1c"),
+            'Task': self.task_entry.get().strip() or "Error: Task cannot be empty.",  # Ensure task is not empty
+            'Goal': self.goal_entry.get().strip(),  # Strip spaces
+            'Time Spent on Task': float(self.pomodoro.getStopWatchData()['Elapsed Time']) + float(self.pomodoro.getStopWatchData()['Bonus Time']),  # Convert to int
+            'Time Rested': float(self.breakStopwatch.getStopWatchData()['Elapsed Time']) + float(self.breakStopwatch.getStopWatchData()['Bonus Time']),  # Convert to int
+            'Reflection': self.reflection_textbox.get("1.0", "end-1c").strip(),  # Ensure reflection text is valid
+            'Number of Distractions': int(self.numOfDistraction),  # Ensure integer value
         }
+
 
         # Convert data to a list of lists (for Google Sheets API)
         values = [[v for v in data.values()]]
@@ -541,27 +540,15 @@ class PomodoroApp:
             print(f"{result.get('updates').get('updatedCells')} cells appended.")
         except Exception as err:
             print(f"An error occurred with Google Sheets API: {err}. Falling back to Excel.")
-            self.insert_into_database_excel()
+            self.insert_into_database_excel(data)
     #case for when there is an issue connecting with GOOGLE API. Insert into excel sheet instead
-    def insert_into_database_excel(self):
+    def insert_into_database_excel(self, data):
         filename = 'database.xlsx'
         self.pomodoro.pause()
         self.breakStopwatch.pause()
         data = self.pomodoro.getStopWatchData()
         restingData = self.breakStopwatch.getStopWatchData()
         start_time_formatted = time.strftime("%Y-%m-%d %H:%M:%S", self.pomodoro.startLocalTime) if self.pomodoro.startLocalTime else "Not started"
-        data = {
-            'Start Time': data['Local Time'],
-            'Task': self.task_entry.get(),
-            'Goal': self.goal_entry.get(),
-            'Time Spent on Task': data['Elapsed Time'],
-            'Bonus Time Spent on Task': data['Bonus Time'],
-            'Time Rested':  restingData['Elapsed Time'],
-            'Bonus Time Rested': restingData['Bonus Time'],
-            'Number of ': self.numOfDistraction,
-            'Reflection': self.reflection_textbox.get("1.0", "end-1c"),
-            'Satisfaction Level': self.satisfaction_entry.get()
-        }
 
         file_exists = os.path.isfile(filename)
 
