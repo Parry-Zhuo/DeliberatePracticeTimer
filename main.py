@@ -438,15 +438,25 @@ class PomodoroApp:
     def validate_satisfaction(self, event=None):
         try:
             val = int(self.satisfaction_entry.get())
-            if not 1 <= val <= 3:
-                raise ValueError("Satisfaction rating must be between 1 and 3.")
-            else:
-                return True
+            return 1 <= val <= 3
         except ValueError:
-            self.satisfaction_entry.delete(0, 'end')
-            self.satisfaction_entry.insert(0, "Invalid input")
-        return False
+            return False
+
     def validate_data(self):
+        """
+        @brief Validates user input before allowing database insertion.
+        
+        @details This function checks multiple conditions to ensure that the input 
+                data is valid. If any condition is not met, it blocks insertion 
+                and displays an error notification.
+
+        @return True if all conditions are met, otherwise False.
+        """
+        isSatisfaction = self.validate_satisfaction()  # Call the function
+        if not isSatisfaction:
+            send_notification("Error", "Satisfaction rating must be between 1 and 3.")
+            return False
+
         task = self.task_entry.get().strip()
         if not task:
             send_notification("Error", "Task cannot be empty.")
