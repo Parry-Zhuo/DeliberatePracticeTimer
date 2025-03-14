@@ -8,7 +8,7 @@ The Deliberate Practice Tracker App was designed to help me apply this method by
 <img src="https://github.com/user-attachments/assets/d0338e53-48b1-493d-a38b-8ca59df22748" alt="Description of image" width="250"/>
 
 ## How does the app WORK?
-There are three modes, 
+There are three modes, that are cycled through
 1. Setting goals
 2. Focusing, and achieving set goals
 3. Reflecting and improving upon practice 
