@@ -497,7 +497,7 @@ class PomodoroApp:
     def authenticate_google_sheets(self):
         """Authenticate and return the Google Sheets service."""
         SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-        SERVICE_ACCOUNT_FILE = r'C:\Users\Parry\Documents\python\deliberatepra-9ecb1d8fcae6.json'
+        SERVICE_ACCOUNT_FILE = r'C:\Users\Parry\Documents\python\deliberatepra-1cdd2d11325d.json'
 
         creds = service_account.Credentials.from_service_account_file(
             SERVICE_ACCOUNT_FILE, scopes=SCOPES)
