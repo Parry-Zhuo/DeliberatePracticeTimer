@@ -12,9 +12,9 @@ often yielding growth that tapers off as they continue practicing(logarithmic gr
 
 ## How does the app WORK?
 There are three modes, that are cycled through
-1. Setting "SMART" goals
+1. Setting "SMART" goals - (specific,measurable,actionable, relevant, and time bound)
 2. Focusing, and achieving set goals
-3. Reflecting and improving upon practice 
+3. Reflecting and collecting data for areas of improvement 
 
 **GOAL SETTING MODE**
 
