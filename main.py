@@ -118,7 +118,6 @@ class PomodoroApp:
         self.focus_problemsolving_frame = ttk.Frame(self.master, style='TFrame')
         self.focus_distraction_frame = ttk.Frame(self.master, style='TFrame')
 
-
         self.focus_goalSetting_frame = ttk.Frame(self.master, style='TFrame')
 
         self.distractionTextBox = tk.Text(self.focus_distraction_frame, height=12, width=70)
@@ -733,7 +732,7 @@ class PomodoroApp:
             # Open for Problem Solving
             self.meta_box_app.open_file()
 
-
+    
 def format_time(seconds):
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
@@ -747,7 +746,6 @@ def send_notification(title, message):
     )
 
 def initializeBorderButtons(master,frame,_appInstance):
-
 
     global app
     menu = tk.Menu(master)
