@@ -321,8 +321,6 @@ class PomodoroApp:
             self.focus_goalSetting_frame.place(relx=0, rely=0, relwidth=1, relheight=1)
             self.focus_goalSetting_frame.tkraise()  # Bring this frame to the top
             self.active_frame = self.focus_goalSetting_frame
-
-
     def show_focus(self):
         error_present = False
 
@@ -374,7 +372,7 @@ class PomodoroApp:
         # print(self.meta_box_app.head)
         # if(self.meta_box_app.head is None):
             # self.meta_box_app.new_head()
-
+        self.toggle_focus_frames(frame_name = "reset")
         self.master.update_idletasks()  # Refresh geometry calculations
         self.master.geometry("")  # Let Tkinter automatically resize the window
             
@@ -422,8 +420,8 @@ class PomodoroApp:
             else:
                 send_notification("error", "Data validation failed. Not inserting.")
                 error_present = True
-        elif action == "discard":
-            print("Changes discarded.")
+        # elif action == "discard":
+        #     print("Changes discarded.")
 
         if not error_present:
             self.toggle_sound(state="OFF")
@@ -616,12 +614,10 @@ class PomodoroApp:
         if hasattr(self, 'break_time_label'):
             self.break_time_label.config(text="00:00")
         # self.meta_box_app.delete_tree(self.meta_box_app.head)
-    #metaBox resets.
-    #1. we need to ensure that it is not reset. THen replace it here. So that'll probably be done in show_focus
+    
     def newProblem(self):
+        #resets problem solving frame or resets metaBox.
         self.meta_box_app.new_head()
-        self.master.update_idletasks()  # Refresh geometry calculations
-        self.master.geometry("")  # Let Tkinter automatically resize the window
 
     def reset_and_pause_break_stopwatch(self):
         
@@ -652,7 +648,10 @@ class PomodoroApp:
                 self.numOfDistraction += 1
 
         # If no frame is active, or the same frame is requested, toggle visibility
-        if self.active_frame is None:
+        if frame_name == "reset":
+            self.focus_distraction_frame.pack_forget()
+            self.focus_problemsolving_frame.pack_forget()
+        elif self.active_frame is None:
             requested_frame.pack(fill="both", expand=True, after=self.focus_button_frame)
             self.active_frame = requested_frame
         elif self.active_frame == requested_frame:
