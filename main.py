@@ -373,7 +373,7 @@ class PomodoroApp:
             self.focus_frame.pack(fill='both', expand=True)
         # print(self.meta_box_app.head)
         # if(self.meta_box_app.head is None):
-            self.meta_box_app.new_head()
+            # self.meta_box_app.new_head()
 
         self.master.update_idletasks()  # Refresh geometry calculations
         self.master.geometry("")  # Let Tkinter automatically resize the window
@@ -616,6 +616,12 @@ class PomodoroApp:
         if hasattr(self, 'break_time_label'):
             self.break_time_label.config(text="00:00")
         # self.meta_box_app.delete_tree(self.meta_box_app.head)
+    #metaBox resets.
+    #1. we need to ensure that it is not reset. THen replace it here. So that'll probably be done in show_focus
+    def newProblem(self):
+        self.meta_box_app.new_head()
+        self.master.update_idletasks()  # Refresh geometry calculations
+        self.master.geometry("")  # Let Tkinter automatically resize the window
 
     def reset_and_pause_break_stopwatch(self):
         
@@ -759,6 +765,7 @@ def initializeBorderButtons(master,frame,_appInstance):
     subMenu.add_command(label = "save", command=lambda: app.save_active_meta_box())
     subMenu.add_command(label="Open",command=lambda: app.open_active_meta_box())
     subMenu.add_command(label="Goal setting" , command=app.toggle_goalSetting_frame)
+    subMenu.add_command(label="New problem" , command=app.newProblem)
     subMenu.add_separator()
 
     transparentMenu.add_command(label = "30%",command = lambda: changeRootTransparency(master,0.3))
@@ -767,6 +774,7 @@ def initializeBorderButtons(master,frame,_appInstance):
     transparentMenu.add_command(label = "70%",command = lambda: changeRootTransparency(master,0.7))
     transparentMenu.add_command(label = "80%",command = lambda: changeRootTransparency(master,0.8))
     transparentMenu.add_command(label = "100%",command = lambda: changeRootTransparency(master,1.0))	
+
 def changeRootTransparency(master,percentage):
     root.attributes("-alpha",percentage)
 
