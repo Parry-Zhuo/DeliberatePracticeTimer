@@ -1,7 +1,5 @@
 ## Have you ever done a task over and over and over again, but never quite seem to improve?
 
-Introducing the deliberate practice timer!
-
 Deliberate practice is a method for practicing that involves setting clear goals, practicing, then obtaining feedback to improve ones own practice.
 This allows users to deliberately target areas of improvements.
 
@@ -10,7 +8,7 @@ This allows users to deliberately target areas of improvements.
 Contrast that with mindless practice which involves passive repetition that relies on practictioners to improve automatically through mindlessly practicing
 often yielding growth that tapers off as they continue practicing(logarithmic growth)
 
-## How does the app WORK?
+## How does the deliberatePracticeTimer help in applying deliberate practice to your work?
 There are three modes, that are cycled through
 1. Setting "SMART" goals - (specific,measurable,actionable, relevant, and time bound)
 2. Focusing, and achieving set goals
