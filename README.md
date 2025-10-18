@@ -8,7 +8,7 @@ This allows users to deliberately target areas of improvements.
 Contrast that with mindless practice which involves passive repetition that relies on practictioners to improve automatically through mindlessly practicing
 often yielding growth that tapers off as they continue practicing(logarithmic growth)
 
-## How does the deliberatePracticeTimer help in applying deliberate practice to your work?
+## How this app help in applying deliberate practice to YOUR work?
 There are three modes, that are cycled through
 1. Setting "SMART" goals - (specific,measurable,actionable, relevant, and time bound)
 2. Focusing, and achieving set goals
