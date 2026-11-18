@@ -1,5 +1,6 @@
 import tkinter as tk
 from stopWatchClass import Stopwatch
+from cubeLink import CubeLink  # BLE sync with the Breathing Cube
 import time
 from plyer import notification  # Import the notification functionality from plyer
 import os
@@ -82,11 +83,16 @@ class PomodoroApp:
         self.tick_channel = pygame.mixer.find_channel()
         self.sound_enabled = True  # Default to sound being on
 
+        # Breathing Cube over BLE (background thread; reached only while the
+        # cube is on USB-C power).
+        self.cube = CubeLink()
+
         self.setup_frames()
         self.setup_focus_widgets()
         self.setup_contemplation_widgets()
         self.setup_reflection_widgets()
         self.show_contemplation()
+        self.update_cube_status()
 
     def setup_frames(self):
         style = ttk.Style()
@@ -191,7 +197,7 @@ class PomodoroApp:
             self.focus_frame,
             text="DISCARD",
             style='TButton',
-            command=self.show_contemplation
+            command=self.discard_focus
         )
         discard_focus_button.pack(pady=(20, 10))
 
@@ -235,6 +241,9 @@ class PomodoroApp:
 
         contemplation_button = ttk.Button(self.contemplation_frame, text="SWITCH TO FOCUS", style='TButton', command=self.show_focus)
         contemplation_button.pack(pady=(10, 10))
+
+        self.cube_status_label = ttk.Label(self.contemplation_frame, text=self.cube.status, style='TLabel')
+        self.cube_status_label.pack(pady=(0, 5))
 
         self.contemplation_frame.pack(fill='both', expand=True, padx=10, pady=10)
     def setup_reflection_widgets(self):
@@ -365,6 +374,10 @@ class PomodoroApp:
             self.pomodoro.set_time(pomodoro_time)
             self.pomodoro.start()
 
+            # Cube: upload the preset (seconds) and start breathing; it rings
+            # when the focus time is up.
+            self.cube.start_focus(pomodoro_time * 60, task_text)
+
             # Switch frames
             self.contemplation_frame.pack_forget()
             self.reflection_frame.pack_forget()
@@ -380,6 +393,7 @@ class PomodoroApp:
         # Pause pomodoro and sound
         self.tick_channel.stop()
         self.pomodoro.pause()
+        self.cube.stop()  # END FOCUS: stop the cube's timer and lights.
 
         # Print data for debugging
         data = self.pomodoro.getStopWatchData()
@@ -411,6 +425,17 @@ class PomodoroApp:
         self.reflection_frame.pack(fill='both', expand=True)
         self.master.update_idletasks()  # Refresh geometry calculations
         self.master.geometry("")  # Let Tkinter automatically resize the window
+
+    def discard_focus(self):
+        """DISCARD: end the session in the app and on the cube."""
+        self.cube.stop()
+        self.show_contemplation()
+
+    def update_cube_status(self):
+        """Show the cube link state; polled because Tk is not thread-safe."""
+        if self.cube_status_label.cget("text") != self.cube.status:
+            self.cube_status_label.config(text=self.cube.status)
+        self.master.after(1000, self.update_cube_status)
 
     def show_contemplation(self, action=None):
         error_present = False
@@ -494,7 +519,7 @@ class PomodoroApp:
     def authenticate_google_sheets(self):
         """Authenticate and return the Google Sheets service."""
         SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-        SERVICE_ACCOUNT_FILE = r'C:\Users\Parry\Documents\python\deliberatepra-1cdd2d11325d.json'
+        SERVICE_ACCOUNT_FILE = r'C:\Users\Parry\Documents\python\deliberatepra-4ffaf7b79c01.json'
 
         creds = service_account.Credentials.from_service_account_file(
             SERVICE_ACCOUNT_FILE, scopes=SCOPES)
@@ -724,6 +749,7 @@ class PomodoroApp:
         else:
             # Save and open for Problem Solving
             self.meta_box_app.save(self.meta_box_app.head)
+            
     def open_active_meta_box(self):
         """
         Opens the meta box app for the currently active frame.
@@ -736,7 +762,6 @@ class PomodoroApp:
         else:
             # Open for Problem Solving
             self.meta_box_app.open_file()
-
     
 def format_time(seconds):
     hours = int(seconds // 3600)
